@@ -441,6 +441,13 @@
         <button onclick="applyDateFilter()">Apply Filter</button>
         <button class="reset" onclick="resetDateFilter()">Show All</button>
         
+        <div style="border-left: 2px solid #e2e8f0; height: 30px; margin: 0 10px;"></div>
+        
+        <label for="branchFilter">🏢 Branch:</label>
+        <select id="branchFilter" onchange="applyBranchFilter()" style="padding: 10px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
+            <option value="all">All Branches</option>
+        </select>
+        
         <div class="date-filter-info" id="filterInfo">
             Showing all data
         </div>
@@ -511,6 +518,7 @@
         let dashboardData = {};
         let startDateFilter = null;
         let endDateFilter = null;
+        let branchFilter = 'all';
         
         function initializeDateFilter() {
             const today = new Date();
@@ -521,6 +529,70 @@
             document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
             
             applyDateFilter();
+        }
+        
+        function populateBranchFilter() {
+            const branches = new Set();
+            
+            // Collect all unique branches from all data sources
+            const allData = [
+                ...(dashboardData.csTeam || []),
+                ...(dashboardData.disputes || []),
+                ...(dashboardData.creativeStrategist || []),
+                ...(dashboardData.videoEditors || []),
+                ...(dashboardData.campaigns || []),
+                ...(dashboardData.funnels || []),
+                ...(dashboardData.hiring || [])
+            ];
+            
+            allData.forEach(row => {
+                if (row.Branch) {
+                    branches.add(row.Branch);
+                }
+            });
+            
+            const select = document.getElementById('branchFilter');
+            const currentValue = select.value;
+            
+            // Clear existing options except "All Branches"
+            select.innerHTML = '<option value="all">All Branches</option>';
+            
+            // Add branch options
+            Array.from(branches).sort().forEach(branch => {
+                const option = document.createElement('option');
+                option.value = branch;
+                option.textContent = branch;
+                select.appendChild(option);
+            });
+            
+            // Restore previous selection if it still exists
+            if (currentValue !== 'all' && branches.has(currentValue)) {
+                select.value = currentValue;
+            }
+        }
+        
+        function applyBranchFilter() {
+            branchFilter = document.getElementById('branchFilter').value;
+            updateFilterInfo();
+            renderAll();
+        }
+        
+        function updateFilterInfo() {
+            let info = '';
+            
+            if (startDateFilter && endDateFilter) {
+                const startFormatted = startDateFilter.toLocaleDateString();
+                const endFormatted = endDateFilter.toLocaleDateString();
+                info = `Showing: ${startFormatted} to ${endFormatted}`;
+            } else {
+                info = 'Showing all data';
+            }
+            
+            if (branchFilter !== 'all') {
+                info += ` | Branch: ${branchFilter}`;
+            }
+            
+            document.getElementById('filterInfo').textContent = info;
         }
         
         function applyDateFilter() {
@@ -540,19 +612,17 @@
             startDateFilter = new Date(startDate);
             endDateFilter = new Date(endDate);
             
-            const startFormatted = new Date(startDate).toLocaleDateString();
-            const endFormatted = new Date(endDate).toLocaleDateString();
-            document.getElementById('filterInfo').textContent = 
-                `Showing: ${startFormatted} to ${endFormatted}`;
-            
+            updateFilterInfo();
             renderAll();
         }
         
         function resetDateFilter() {
             startDateFilter = null;
             endDateFilter = null;
+            branchFilter = 'all';
+            document.getElementById('branchFilter').value = 'all';
             
-            document.getElementById('filterInfo').textContent = 'Showing all data';
+            updateFilterInfo();
             renderAll();
         }
         
@@ -636,14 +706,28 @@
         }
         
         function filterByDate(data) {
-            if (!startDateFilter || !endDateFilter) return data;
+            if (!data || data.length === 0) return [];
             
-            return data.filter(row => {
-                const rowDate = parseDate(row.Date);
-                if (!rowDate || isNaN(rowDate.getTime())) return false;
-                
-                return rowDate >= startDateFilter && rowDate <= endDateFilter;
-            });
+            let filtered = data;
+            
+            // Apply date filter
+            if (startDateFilter && endDateFilter) {
+                filtered = filtered.filter(row => {
+                    const rowDate = parseDate(row.Date);
+                    if (!rowDate || isNaN(rowDate.getTime())) return false;
+                    
+                    return rowDate >= startDateFilter && rowDate <= endDateFilter;
+                });
+            }
+            
+            // Apply branch filter
+            if (branchFilter !== 'all') {
+                filtered = filtered.filter(row => {
+                    return row.Branch === branchFilter;
+                });
+            }
+            
+            return filtered;
         }
         
         function getLatestPerEntity(data, entityKey = 'Name') {
@@ -717,6 +801,7 @@
                     redFlags
                 };
                 
+                populateBranchFilter();
                 renderAll();
                 
                 document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
@@ -884,180 +969,316 @@
             const csTeamRaw = dashboardData.csTeam || [];
             const csTeam = getLatestPerEntity(filterByDate(csTeamRaw), 'Name');
             
+            const disputesRaw = dashboardData.disputes || [];
+            const disputes = getLatestPerEntity(filterByDate(disputesRaw), 'Handler');
+            
             const veRaw = dashboardData.videoEditors || [];
             const ve = getLatestPerEntity(filterByDate(veRaw), 'Name');
             
             const csRaw = dashboardData.creativeStrategist || [];
             const cs = getLatestPerEntity(filterByDate(csRaw), 'Name');
             
-            const disputesRaw = dashboardData.disputes || [];
-            const disputes = getLatestPerEntity(filterByDate(disputesRaw), 'Handler');
-            
-            // Calculate capacity metrics
-            const csCapacity = calculateTeamCapacity(csTeam, 'Messages');
-            const veCapacity = calculateTeamCapacity(ve, 'VideosToday');
-            const csCapacityCalc = calculateTeamCapacity(cs, 'ScriptsToday');
-            const disputesCapacity = calculateTeamCapacity(disputes, 'ManualToday');
-            
             let html = `
                 <div class="team-section">
                     <h3>📊 Team Capacity Overview</h3>
                     <p style="margin-bottom: 20px; color: #718096;">
-                        Capacity = (Hours Worked Today / 8 hours) × 100<br>
-                        <strong>100%+</strong> = Overloaded | <strong>80-100%</strong> = Healthy | <strong><80%</strong> = Underloaded
+                        Individual capacity = (Hours Worked Today / 8 hours) × 100<br>
+                        <strong>≥100%</strong> = Overloaded | <strong>80-100%</strong> = Healthy | <strong><80%</strong> = Underloaded
                     </p>
                 </div>
             `;
             
-            // CS Team Capacity
+            // CS Team
             if (csTeam.length > 0) {
+                const teamCapacity = calculateTeamCapacity(csTeam, 'Messages');
+                
                 html += `
                     <div class="capacity-card">
-                        <h3>📞 CS Team Capacity</h3>
-                        <div class="capacity-grid">
-                            <div class="capacity-item">
-                                <div class="capacity-label">Team Size</div>
-                                <div class="capacity-value">${csTeam.length}</div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Capacity</div>
-                                <div class="capacity-value">${csCapacity.avgCapacity}%</div>
-                                <div class="capacity-status ${csCapacity.avgCapacity >= 100 ? 'critical' : csCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
-                                    ${csCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : csCapacity.avgCapacity >= 80 ? '🟢 Healthy' : csCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                        <h3>📞 CS Team</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Team Size</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${csTeam.length}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Capacity</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity}%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Hours/Day</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${teamCapacity.avgHours}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Status</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : teamCapacity.avgCapacity >= 80 ? '🟢 Healthy' : '🟡 Underloaded'}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Hours/Day</div>
-                                <div class="capacity-value">${csCapacity.avgHours}</div>
-                                <div class="capacity-status ${csCapacity.avgHours >= 8 ? 'critical' : csCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
-                                    ${csCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : csCapacity.avgHours >= 6.4 ? '✓ Normal' : '📉 Low hours'}
-                                </div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #4a5568;">
+                                <strong>Recommendation:</strong> ${teamCapacity.recommendation}
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Recommendation</div>
-                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
-                                    ${csCapacity.recommendation}
-                                </div>
-                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #2d3748;">Individual Capacity:</div>
+                            <table style="display: table;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Hours Worked</th>
+                                        <th>Capacity %</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                csTeam.forEach(person => {
+                    const hours = parseFloat(person.HoursWorkedToday || person.HoursToday || 0);
+                    const capacity = hours > 0 ? Math.round((hours / 8) * 100) : 0;
+                    const statusClass = capacity >= 100 ? 'status-redflag' : capacity >= 80 ? 'status-good' : capacity > 0 ? 'status-warning' : '';
+                    const statusText = capacity >= 100 ? '🔴 Overloaded' : capacity >= 80 ? '🟢 Healthy' : capacity > 0 ? '🟡 Underloaded' : '⚠️ No data';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Name}</span></td>
+                            <td>${hours} hrs</td>
+                            <td><strong>${capacity}%</strong></td>
+                            <td><span class="${statusClass}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 `;
             }
             
-            // Disputes Capacity
+            // Disputes Team
             if (disputes.length > 0) {
+                const teamCapacity = calculateTeamCapacity(disputes, 'ManualToday');
+                
                 html += `
                     <div class="capacity-card">
-                        <h3>⚖️ Disputes Team Capacity</h3>
-                        <div class="capacity-grid">
-                            <div class="capacity-item">
-                                <div class="capacity-label">Team Size</div>
-                                <div class="capacity-value">${disputes.length}</div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Capacity</div>
-                                <div class="capacity-value">${disputesCapacity.avgCapacity}%</div>
-                                <div class="capacity-status ${disputesCapacity.avgCapacity >= 100 ? 'critical' : disputesCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
-                                    ${disputesCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : disputesCapacity.avgCapacity >= 80 ? '🟢 Healthy' : disputesCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                        <h3>⚖️ Disputes Team</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Team Size</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${disputes.length}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Capacity</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity}%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Hours/Day</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${teamCapacity.avgHours}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Status</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : teamCapacity.avgCapacity >= 80 ? '🟢 Healthy' : '🟡 Underloaded'}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Hours/Day</div>
-                                <div class="capacity-value">${disputesCapacity.avgHours}</div>
-                                <div class="capacity-status ${disputesCapacity.avgHours >= 8 ? 'critical' : disputesCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
-                                    ${disputesCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
-                                </div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #4a5568;">
+                                <strong>Recommendation:</strong> ${teamCapacity.recommendation}
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Recommendation</div>
-                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
-                                    ${disputesCapacity.recommendation}
-                                </div>
-                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #2d3748;">Individual Capacity:</div>
+                            <table style="display: table;">
+                                <thead>
+                                    <tr>
+                                        <th>Handler</th>
+                                        <th>Hours Worked</th>
+                                        <th>Capacity %</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                disputes.forEach(person => {
+                    const hours = parseFloat(person.HoursWorkedToday || person.HoursToday || 0);
+                    const capacity = hours > 0 ? Math.round((hours / 8) * 100) : 0;
+                    const statusClass = capacity >= 100 ? 'status-redflag' : capacity >= 80 ? 'status-good' : capacity > 0 ? 'status-warning' : '';
+                    const statusText = capacity >= 100 ? '🔴 Overloaded' : capacity >= 80 ? '🟢 Healthy' : capacity > 0 ? '🟡 Underloaded' : '⚠️ No data';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Handler}</span></td>
+                            <td>${hours} hrs</td>
+                            <td><strong>${capacity}%</strong></td>
+                            <td><span class="${statusClass}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 `;
             }
             
-            // Video Editors Capacity
-            if (ve.length > 0) {
-                html += `
-                    <div class="capacity-card">
-                        <h3>🎥 Video Editors Capacity</h3>
-                        <div class="capacity-grid">
-                            <div class="capacity-item">
-                                <div class="capacity-label">Team Size</div>
-                                <div class="capacity-value">${ve.length}</div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Capacity</div>
-                                <div class="capacity-value">${veCapacity.avgCapacity}%</div>
-                                <div class="capacity-status ${veCapacity.avgCapacity >= 100 ? 'critical' : veCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
-                                    ${veCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : veCapacity.avgCapacity >= 80 ? '🟢 Healthy' : veCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
-                                </div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Hours/Day</div>
-                                <div class="capacity-value">${veCapacity.avgHours}</div>
-                                <div class="capacity-status ${veCapacity.avgHours >= 8 ? 'critical' : veCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
-                                    ${veCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
-                                </div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Videos Today</div>
-                                <div class="capacity-value">${veCapacity.totalOutput}</div>
-                                <div class="capacity-status good">
-                                    Avg: ${veCapacity.avgPerPerson}/person
-                                </div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Recommendation</div>
-                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
-                                    ${veCapacity.recommendation}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // Creative Strategist Capacity
+            // Creative Strategist Team
             if (cs.length > 0) {
+                const teamCapacity = calculateTeamCapacity(cs, 'ScriptsToday');
+                
                 html += `
                     <div class="capacity-card">
-                        <h3>✍️ Creative Strategist Capacity</h3>
-                        <div class="capacity-grid">
-                            <div class="capacity-item">
-                                <div class="capacity-label">Team Size</div>
-                                <div class="capacity-value">${cs.length}</div>
-                            </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Capacity</div>
-                                <div class="capacity-value">${csCapacityCalc.avgCapacity}%</div>
-                                <div class="capacity-status ${csCapacityCalc.avgCapacity >= 100 ? 'critical' : csCapacityCalc.avgCapacity >= 80 ? 'good' : 'warning'}">
-                                    ${csCapacityCalc.avgCapacity >= 100 ? '🔴 Overloaded' : csCapacityCalc.avgCapacity >= 80 ? '🟢 Healthy' : csCapacityCalc.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                        <h3>✍️ Creative Strategist Team</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Team Size</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${cs.length}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Capacity</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity}%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Hours/Day</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${teamCapacity.avgHours}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Status</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : teamCapacity.avgCapacity >= 80 ? '🟢 Healthy' : '🟡 Underloaded'}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Avg Hours/Day</div>
-                                <div class="capacity-value">${csCapacityCalc.avgHours}</div>
-                                <div class="capacity-status ${csCapacityCalc.avgHours >= 8 ? 'critical' : csCapacityCalc.avgHours >= 6.4 ? 'good' : 'warning'}">
-                                    ${csCapacityCalc.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #4a5568;">
+                                <strong>Recommendation:</strong> ${teamCapacity.recommendation}
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #2d3748;">Individual Capacity:</div>
+                            <table style="display: table;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Branch</th>
+                                        <th>Hours Worked</th>
+                                        <th>Capacity %</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                cs.forEach(person => {
+                    const hours = parseFloat(person.HoursWorkedToday || person.HoursToday || 0);
+                    const capacity = hours > 0 ? Math.round((hours / 8) * 100) : 0;
+                    const statusClass = capacity >= 100 ? 'status-redflag' : capacity >= 80 ? 'status-good' : capacity > 0 ? 'status-warning' : '';
+                    const statusText = capacity >= 100 ? '🔴 Overloaded' : capacity >= 80 ? '🟢 Healthy' : capacity > 0 ? '🟡 Underloaded' : '⚠️ No data';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Name}</span></td>
+                            <td>${person.Branch || '-'}</td>
+                            <td>${hours} hrs</td>
+                            <td><strong>${capacity}%</strong></td>
+                            <td><span class="${statusClass}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Video Editors Team
+            if (ve.length > 0) {
+                const teamCapacity = calculateTeamCapacity(ve, 'VideosToday');
+                
+                html += `
+                    <div class="capacity-card">
+                        <h3>🎥 Video Editors Team</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Team Size</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${ve.length}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Capacity</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity}%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Avg Hours/Day</div>
+                                    <div style="font-size: 20px; font-weight: 700; color: #2d3748;">${teamCapacity.avgHours}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 12px; color: #718096;">Status</div>
+                                    <div style="font-size: 14px; font-weight: 700; color: ${teamCapacity.avgCapacity >= 100 ? '#dc2626' : teamCapacity.avgCapacity >= 80 ? '#059669' : '#d97706'};">
+                                        ${teamCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : teamCapacity.avgCapacity >= 80 ? '🟢 Healthy' : '🟡 Underloaded'}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Scripts Today</div>
-                                <div class="capacity-value">${csCapacityCalc.totalOutput}</div>
-                                <div class="capacity-status good">
-                                    Avg: ${csCapacityCalc.avgPerPerson}/person
-                                </div>
+                            <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #4a5568;">
+                                <strong>Recommendation:</strong> ${teamCapacity.recommendation}
                             </div>
-                            <div class="capacity-item">
-                                <div class="capacity-label">Recommendation</div>
-                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
-                                    ${csCapacityCalc.recommendation}
-                                </div>
-                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #2d3748;">Individual Capacity:</div>
+                            <table style="display: table;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Branch</th>
+                                        <th>Hours Worked</th>
+                                        <th>Capacity %</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                ve.forEach(person => {
+                    const hours = parseFloat(person.HoursWorkedToday || person.HoursToday || 0);
+                    const capacity = hours > 0 ? Math.round((hours / 8) * 100) : 0;
+                    const statusClass = capacity >= 100 ? 'status-redflag' : capacity >= 80 ? 'status-good' : capacity > 0 ? 'status-warning' : '';
+                    const statusText = capacity >= 100 ? '🔴 Overloaded' : capacity >= 80 ? '🟢 Healthy' : capacity > 0 ? '🟡 Underloaded' : '⚠️ No data';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Name}</span></td>
+                            <td>${person.Branch || '-'}</td>
+                            <td>${hours} hrs</td>
+                            <td><strong>${capacity}%</strong></td>
+                            <td><span class="${statusClass}">${statusText}</span></td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 `;
