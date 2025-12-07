@@ -270,6 +270,7 @@
         <div class="filter-group">
             <button onclick="applyFilters()">Apply Filter</button>
             <button onclick="showAll()">Show All</button>
+            <button onclick="refreshData()" style="background: #48bb78;">🔄 Refresh</button>
         </div>
         <div class="filter-group">
             <label>🏢 Branch:</label>
@@ -1305,6 +1306,16 @@
         
         // Auto-refresh every 5 minutes
         setInterval(loadAllData, 5 * 60 * 1000);
+        
+        // Manual refresh
+        function refreshData() {
+            const currentTab = document.querySelector('.tab.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+            document.getElementById('filterInfo').textContent = 'Refreshing...';
+            loadAllData().then(() => {
+                showTab(currentTab);
+                document.getElementById('filterInfo').textContent = 'Data refreshed at ' + new Date().toLocaleTimeString();
+            });
+        }
     </script>
 </body>
 </html>
