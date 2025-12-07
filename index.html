@@ -320,7 +320,8 @@
             funnels: 'Funnels',
             hiring: 'Hiring',
             cooTasks: 'COO Tasks',
-            weekly: 'Weekly Updates'
+            weekly: 'Weekly Updates',
+            redFlags: 'Red Flags'
         };
 
         // Severity weights for campaigns/funnels
@@ -370,12 +371,31 @@
         }
 
         function formatDuration(value) {
-            if (!value) return '';
-            if (typeof value === 'string' && value.includes(':')) return value;
+            if (!value && value !== 0) return '';
             
-            const hours = Math.floor(value * 24);
-            const minutes = Math.floor((value * 24 * 60) % 60);
-            const seconds = Math.floor((value * 24 * 60 * 60) % 60);
+            // Already formatted as HH:MM:SS string
+            if (typeof value === 'string' && value.includes(':')) return value;
+            if (typeof value === 'string' && value.trim() === '') return '';
+            
+            // Handle Google Sheets Date object format: Date(1899,11,30,17,0,34)
+            if (value && typeof value === 'string' && value.includes('Date(')) {
+                const match = value.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+                if (match) {
+                    const hours = parseInt(match[4]);
+                    const minutes = parseInt(match[5]);
+                    const seconds = parseInt(match[6]);
+                    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }
+            }
+            
+            const num = parseFloat(value);
+            if (isNaN(num)) return '';
+            
+            // Convert decimal days to HH:MM:SS
+            const totalSeconds = Math.round(num * 24 * 60 * 60);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
             
             return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
@@ -477,7 +497,12 @@
                     const obj = {};
                     row.c.forEach((cell, i) => {
                         if (headers[i]) {
-                            obj[headers[i]] = cell ? (cell.v !== null ? cell.v : '') : '';
+                            // Use formatted value (f) if available, otherwise use raw value (v)
+                            if (cell) {
+                                obj[headers[i]] = cell.f !== undefined && cell.f !== null ? cell.f : (cell.v !== null ? cell.v : '');
+                            } else {
+                                obj[headers[i]] = '';
+                            }
                         }
                     });
                     return obj;
@@ -520,6 +545,18 @@
         function renderRedFlags() {
             const container = document.getElementById('red-flags');
             const alerts = [];
+            
+            // Manual Red Flags from Red Flags sheet
+            const manualRedFlags = filterData(dashboardData.redFlags || []);
+            manualRedFlags.forEach(row => {
+                alerts.push({
+                    team: row.Category || 'General',
+                    person: row.Title || '',
+                    issue: `${row.Description || ''}<br><strong>Details:</strong> ${row.Details || '-'}<br><strong>Action:</strong> ${row.Action || '-'}`,
+                    date: formatDate(row.Date || row.date),
+                    isManual: true
+                });
+            });
             
             // CS Underperformers
             const csData = filterData(dashboardData.cs || []);
@@ -636,8 +673,8 @@
             
             alerts.forEach(alert => {
                 html += `
-                    <div class="alert-item">
-                        <strong>${alert.team}</strong> - ${alert.person}<br>
+                    <div class="alert-item" ${alert.isManual ? 'style="border-left: 3px solid #e53e3e;"' : ''}>
+                        <strong>${alert.team}</strong> ${alert.person ? '- ' + alert.person : ''}<br>
                         ${alert.issue}<br>
                         <small style="color: #718096;">${alert.date}</small>
                     </div>
