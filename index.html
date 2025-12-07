@@ -66,7 +66,6 @@
             color: #7f1d1d;
         }
 
-        /* Date Filter Styles */
         .date-filter {
             background: white;
             padding: 20px;
@@ -245,154 +244,60 @@
             font-size: 24px;
         }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .metric-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-left: 4px solid #e2e8f0;
-        }
-
-        .metric-card.green {
-            border-left-color: #48bb78;
-        }
-
-        .metric-card.yellow {
-            border-left-color: #ecc94b;
-        }
-
-        .metric-card.red {
-            border-left-color: #f56565;
-        }
-
-        .metric-card.blue {
-            border-left-color: #4299e1;
-        }
-
-        .metric-card.purple {
-            border-left-color: #9f7aea;
-        }
-
-        .metric-label {
-            font-size: 14px;
-            color: #718096;
-            margin-bottom: 8px;
-        }
-
-        .metric-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .metric-card.green .metric-value {
-            color: #2f855a;
-        }
-
-        .metric-card.yellow .metric-value {
-            color: #d69e2e;
-        }
-
-        .metric-card.red .metric-value {
-            color: #c53030;
-        }
-
-        .metric-card.blue .metric-value {
-            color: #2c5282;
-        }
-
-        .metric-card.purple .metric-value {
-            color: #553c9a;
-        }
-
-        .metric-target {
-            font-size: 13px;
-            color: #a0aec0;
-        }
-
-        .metric-change {
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .status-badge.green {
-            background: #c6f6d5;
-            color: #2f855a;
-        }
-
-        .status-badge.yellow {
-            background: #fefcbf;
-            color: #d69e2e;
-        }
-
-        .status-badge.red {
-            background: #fed7d7;
-            color: #c53030;
-        }
-
-        .status-badge.blue {
-            background: #bee3f8;
-            color: #2c5282;
-        }
-
-        .status-badge.purple {
-            background: #e9d8fd;
-            color: #553c9a;
-        }
-
-        .workload-card {
-            background: #edf2f7;
-            border-left: 4px solid #4299e1;
+        .capacity-card {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
 
-        .workload-card h3 {
-            color: #2c5282;
-            font-size: 16px;
-            margin-bottom: 12px;
+        .capacity-card h3 {
+            color: #1e40af;
+            font-size: 18px;
+            margin-bottom: 15px;
         }
 
-        .workload-grid {
+        .capacity-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
 
-        .workload-item {
+        .capacity-item {
             background: white;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 15px;
+            border-radius: 8px;
         }
 
-        .workload-label {
+        .capacity-label {
             font-size: 12px;
             color: #718096;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
-        .workload-value {
-            font-size: 20px;
+        .capacity-value {
+            font-size: 24px;
             font-weight: 700;
             color: #2d3748;
+        }
+
+        .capacity-status {
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .capacity-status.good {
+            color: #059669;
+        }
+
+        .capacity-status.warning {
+            color: #d97706;
+        }
+
+        .capacity-status.critical {
+            color: #dc2626;
         }
 
         .team-section {
@@ -412,6 +317,14 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            overflow-x: auto;
+            display: block;
+        }
+
+        thead, tbody {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
         }
 
         th {
@@ -427,6 +340,7 @@
             padding: 12px;
             border-bottom: 1px solid #e2e8f0;
             font-size: 14px;
+            word-wrap: break-word;
         }
 
         tr:last-child td {
@@ -438,28 +352,31 @@
             color: #2d3748;
         }
 
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
+        .status-redflag {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
         }
 
-        .indicator.green {
-            background: #48bb78;
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
         }
 
-        .indicator.yellow {
-            background: #ecc94b;
-        }
-
-        .indicator.red {
-            background: #f56565;
-        }
-
-        .indicator.blue {
-            background: #4299e1;
+        .status-good {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
         }
 
         .note {
@@ -472,10 +389,6 @@
         }
 
         @media (max-width: 768px) {
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
-
             .tabs {
                 overflow-x: auto;
                 flex-wrap: nowrap;
@@ -502,7 +415,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="loading-spinner">
             <div class="spinner"></div>
@@ -519,7 +431,6 @@
         </div>
     </div>
 
-    <!-- Date Filter -->
     <div class="date-filter">
         <label for="startDate">📅 From:</label>
         <input type="date" id="startDate" />
@@ -537,57 +448,70 @@
 
     <div class="tabs">
         <div class="tab active" onclick="showTab('red-flags')">🚨 Red Flags</div>
-        <div class="tab" onclick="showTab('home-office')">🏢 Home Office</div>
-        <div class="tab" onclick="showTab('branch-operations')">🎬 Branch Operations</div>
-        <div class="tab" onclick="showTab('hr-hiring')">👥 HR & Hiring</div>
+        <div class="tab" onclick="showTab('capacity')">📊 Capacity Planning</div>
+        <div class="tab" onclick="showTab('cs')">📞 CS</div>
+        <div class="tab" onclick="showTab('disputes')">⚖️ Disputes</div>
+        <div class="tab" onclick="showTab('creative-strategist')">✍️ Creative Strategist</div>
+        <div class="tab" onclick="showTab('video-editors')">🎥 Video Editors</div>
+        <div class="tab" onclick="showTab('funnel-builders')">🎯 Funnel Builders</div>
+        <div class="tab" onclick="showTab('campaign-launcher')">📧 Campaign Launcher</div>
+        <div class="tab" onclick="showTab('hr')">👥 HR</div>
     </div>
 
-    <!-- All tab content will be populated dynamically -->
     <div id="red-flags" class="tab-content active">
         <div id="redFlagsContent"></div>
     </div>
 
-    <div id="home-office" class="tab-content">
-        <div id="homeOfficeContent"></div>
+    <div id="capacity" class="tab-content">
+        <div id="capacityContent"></div>
     </div>
 
-    <div id="branch-operations" class="tab-content">
-        <div id="branchOpsContent"></div>
+    <div id="cs" class="tab-content">
+        <div id="csContent"></div>
     </div>
 
-    <div id="hr-hiring" class="tab-content">
-        <div id="hrHiringContent"></div>
+    <div id="disputes" class="tab-content">
+        <div id="disputesContent"></div>
+    </div>
+
+    <div id="creative-strategist" class="tab-content">
+        <div id="creativeStrategistContent"></div>
+    </div>
+
+    <div id="video-editors" class="tab-content">
+        <div id="videoEditorsContent"></div>
+    </div>
+
+    <div id="funnel-builders" class="tab-content">
+        <div id="funnelBuildersContent"></div>
+    </div>
+
+    <div id="campaign-launcher" class="tab-content">
+        <div id="campaignLauncherContent"></div>
+    </div>
+
+    <div id="hr" class="tab-content">
+        <div id="hrContent"></div>
     </div>
 
     <script>
-        // ========================================
-        // CONFIGURATION
-        // ========================================
-        
-        const GOOGLE_SHEETS_ID = '1mDLav3tCDpttHdzEmJPdZAy6SXD-01izI9LyzrDSW9Q'; // Replace with your Sheet ID!
+        const GOOGLE_SHEETS_ID = '1mDLav3tCDpttHdzEmJPdZAy6SXD-01izI9LyzrDSW9Q';
         
         const SHEETS = {
             CS_TEAM: 'CS Team',
             DISPUTES: 'Disputes',
+            CREATIVE_STRATEGIST: 'Creative Strategist',
+            VIDEO_EDITORS: 'Video Editors',
             CAMPAIGNS: 'Campaigns',
             FUNNELS: 'Funnels',
-            BRANCHES: 'Branches',
-            VIDEO_EDITORS: 'Video Editors',
             HIRING: 'Hiring',
             RED_FLAGS: 'Red Flags'
         };
 
-        // Global data store
         let dashboardData = {};
-        
-        // ========================================
-        // DATE FILTERING
-        // ========================================
-        
         let startDateFilter = null;
         let endDateFilter = null;
         
-        // Initialize date filter with last 7 days
         function initializeDateFilter() {
             const today = new Date();
             const lastWeek = new Date();
@@ -596,11 +520,9 @@
             document.getElementById('endDate').value = today.toISOString().split('T')[0];
             document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
             
-            // Apply filter by default
             applyDateFilter();
         }
         
-        // Apply date filter
         function applyDateFilter() {
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
@@ -618,74 +540,112 @@
             startDateFilter = new Date(startDate);
             endDateFilter = new Date(endDate);
             
-            // Update filter info
             const startFormatted = new Date(startDate).toLocaleDateString();
             const endFormatted = new Date(endDate).toLocaleDateString();
             document.getElementById('filterInfo').textContent = 
                 `Showing: ${startFormatted} to ${endFormatted}`;
             
-            // Re-render all sections
-            renderRedFlags();
-            renderHomeOffice();
-            renderBranchOps();
-            renderHiring();
-            
-            console.log('Date filter applied:', startDate, 'to', endDate);
+            renderAll();
         }
         
-        // Reset date filter
         function resetDateFilter() {
             startDateFilter = null;
             endDateFilter = null;
             
             document.getElementById('filterInfo').textContent = 'Showing all data';
-            
-            // Re-render all sections
-            renderRedFlags();
-            renderHomeOffice();
-            renderBranchOps();
-            renderHiring();
-            
-            console.log('Date filter reset');
+            renderAll();
         }
         
-        // Filter data by date
-        function filterByDate(data) {
-            if (!startDateFilter || !endDateFilter) {
-                return data;
+        function renderAll() {
+            renderRedFlags();
+            renderCapacity();
+            renderCS();
+            renderDisputes();
+            renderCreativeStrategist();
+            renderVideoEditors();
+            renderFunnelBuilders();
+            renderCampaignLauncher();
+            renderHR();
+        }
+        
+        function parseDate(dateValue) {
+            if (!dateValue) return null;
+            
+            if (typeof dateValue === 'string' && dateValue.startsWith('Date(')) {
+                const match = dateValue.match(/Date\((\d+),(\d+),(\d+)\)/);
+                if (match) {
+                    const year = parseInt(match[1]);
+                    const month = parseInt(match[2]);
+                    const day = parseInt(match[3]);
+                    return new Date(year, month, day);
+                }
             }
+            
+            if (typeof dateValue === 'number') {
+                const excelEpoch = new Date(1899, 11, 30);
+                const date = new Date(excelEpoch.getTime() + dateValue * 24 * 60 * 60 * 1000);
+                return date;
+            }
+            
+            if (typeof dateValue === 'string') {
+                if (dateValue.includes('-')) {
+                    return new Date(dateValue);
+                }
+                
+                if (dateValue.includes('/')) {
+                    const parts = dateValue.split('/');
+                    const month = parseInt(parts[0]) - 1;
+                    const day = parseInt(parts[1]);
+                    const year = parts[2] ? parseInt(parts[2]) : new Date().getFullYear();
+                    const fullYear = year < 100 ? 2000 + year : year;
+                    return new Date(fullYear, month, day);
+                }
+            }
+            
+            return null;
+        }
+        
+        function formatDisplayDate(dateValue) {
+            const date = parseDate(dateValue);
+            if (!date || isNaN(date.getTime())) return dateValue || '-';
+            
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const year = date.getFullYear();
+            
+            return `${month}/${day}/${year}`;
+        }
+        
+        function formatDuration(value) {
+            if (!value) return '-';
+            
+            if (typeof value === 'string' && value.includes(':')) {
+                return value;
+            }
+            
+            if (typeof value === 'number' && value < 1) {
+                const totalSeconds = Math.round(value * 24 * 60 * 60);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+            
+            return value;
+        }
+        
+        function filterByDate(data) {
+            if (!startDateFilter || !endDateFilter) return data;
             
             return data.filter(row => {
                 const rowDate = parseDate(row.Date);
-                if (!rowDate) return false;
+                if (!rowDate || isNaN(rowDate.getTime())) return false;
                 
                 return rowDate >= startDateFilter && rowDate <= endDateFilter;
             });
         }
         
-        // Parse date string
-        function parseDate(dateStr) {
-            if (!dateStr) return null;
-            
-            let date;
-            
-            if (dateStr.includes('-')) {
-                date = new Date(dateStr);
-            } else if (dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                const month = parseInt(parts[0]) - 1;
-                const day = parseInt(parts[1]);
-                const year = parts[2] ? parseInt(parts[2]) : new Date().getFullYear();
-                const fullYear = year < 100 ? 2000 + year : year;
-                date = new Date(fullYear, month, day);
-            } else {
-                return null;
-            }
-            
-            return isNaN(date.getTime()) ? null : date;
-        }
-        
-        // Get latest entry per entity
         function getLatestPerEntity(data, entityKey = 'Name') {
             if (!data || data.length === 0) return [];
             
@@ -706,10 +666,6 @@
             return Array.from(latestMap.values());
         }
 
-        // ========================================
-        // DATA FETCHING
-        // ========================================
-        
         async function fetchSheetData(sheetName, range = 'A:Z') {
             const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}&range=${range}`;
             
@@ -739,13 +695,13 @@
             updateSyncStatus('syncing', '⟳ Syncing...');
             
             try {
-                const [csTeam, disputes, campaigns, funnels, branches, videoEditors, hiring, redFlags] = await Promise.all([
+                const [csTeam, disputes, creativeStrategist, videoEditors, campaigns, funnels, hiring, redFlags] = await Promise.all([
                     fetchSheetData(SHEETS.CS_TEAM),
                     fetchSheetData(SHEETS.DISPUTES),
+                    fetchSheetData(SHEETS.CREATIVE_STRATEGIST),
+                    fetchSheetData(SHEETS.VIDEO_EDITORS),
                     fetchSheetData(SHEETS.CAMPAIGNS),
                     fetchSheetData(SHEETS.FUNNELS),
-                    fetchSheetData(SHEETS.BRANCHES),
-                    fetchSheetData(SHEETS.VIDEO_EDITORS),
                     fetchSheetData(SHEETS.HIRING),
                     fetchSheetData(SHEETS.RED_FLAGS)
                 ]);
@@ -753,18 +709,15 @@
                 dashboardData = {
                     csTeam,
                     disputes,
+                    creativeStrategist,
+                    videoEditors,
                     campaigns,
                     funnels,
-                    branches,
-                    videoEditors,
                     hiring,
                     redFlags
                 };
                 
-                renderRedFlags();
-                renderHomeOffice();
-                renderBranchOps();
-                renderHiring();
+                renderAll();
                 
                 document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
                 updateSyncStatus('synced', '✓ Synced with Google Sheets');
@@ -777,19 +730,120 @@
             }
         }
 
-        // ========================================
-        // RENDERING FUNCTIONS
-        // ========================================
-        
+        function renderDynamicTable(data, title, icon = '📊') {
+            if (!data || data.length === 0) {
+                return `<p>No data available for ${title}</p>`;
+            }
+            
+            const columns = Object.keys(data[0]).filter(col => col !== 'Date');
+            
+            let html = `
+                <div class="team-section">
+                    <h3>${icon} ${title}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+            `;
+            
+            columns.forEach(col => {
+                html += `<th>${col}</th>`;
+            });
+            
+            html += `
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            data.forEach(row => {
+                html += `<tr><td>${formatDisplayDate(row.Date)}</td>`;
+                
+                columns.forEach(col => {
+                    let value = row[col];
+                    
+                    if (col.toLowerCase().includes('response') || 
+                        col.toLowerCase().includes('time') || 
+                        col.toLowerCase().includes('duration')) {
+                        value = formatDuration(value);
+                    }
+                    
+                    // Highlight Status column
+                    if (col === 'Status' || col === 'Flag' || col === 'Alert') {
+                        const statusValue = (value || '').toString().toLowerCase();
+                        if (statusValue.includes('red') || statusValue.includes('alert') || statusValue.includes('critical')) {
+                            value = `<span class="status-redflag">${value}</span>`;
+                        } else if (statusValue.includes('warn') || statusValue.includes('watch')) {
+                            value = `<span class="status-warning">${value}</span>`;
+                        } else if (value) {
+                            value = `<span class="status-good">${value}</span>`;
+                        }
+                    }
+                    
+                    html += `<td>${value || '-'}</td>`;
+                });
+                
+                html += `</tr>`;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // AUTO-COLLECT red flags from ALL sheets based on Status column
+        function collectAllRedFlags() {
+            const allRedFlags = [];
+            
+            // Check all data sources for red flag status
+            const dataSources = [
+                { data: dashboardData.csTeam, name: 'CS Team', key: 'Name' },
+                { data: dashboardData.disputes, name: 'Disputes', key: 'Handler' },
+                { data: dashboardData.creativeStrategist, name: 'Creative Strategist', key: 'Name' },
+                { data: dashboardData.videoEditors, name: 'Video Editors', key: 'Name' },
+                { data: dashboardData.campaigns, name: 'Campaigns', key: 'Campaign' },
+                { data: dashboardData.funnels, name: 'Funnels', key: 'Funnel' },
+                { data: dashboardData.hiring, name: 'Hiring', key: 'Position' },
+                { data: dashboardData.redFlags, name: 'Red Flags Manual', key: 'Title' }
+            ];
+            
+            dataSources.forEach(source => {
+                if (!source.data) return;
+                
+                const filtered = filterByDate(source.data);
+                const latest = getLatestPerEntity(filtered, source.key);
+                
+                latest.forEach(row => {
+                    const statusValue = (row.Status || row.Flag || row.Alert || '').toString().toLowerCase();
+                    
+                    if (statusValue.includes('red') || statusValue.includes('alert') || statusValue.includes('critical')) {
+                        allRedFlags.push({
+                            source: source.name,
+                            entity: row[source.key],
+                            date: row.Date,
+                            status: row.Status || row.Flag || row.Alert,
+                            data: row
+                        });
+                    }
+                });
+            });
+            
+            return allRedFlags;
+        }
+
         function renderRedFlags() {
             const container = document.getElementById('redFlagsContent');
-            const flagsRaw = dashboardData.redFlags || [];
-            const flags = filterByDate(flagsRaw);
+            const flags = collectAllRedFlags();
             
             if (flags.length === 0) {
                 container.innerHTML = `
                     <div class="success-banner">
                         <h2>✅ No Red Flags - All Systems Healthy!</h2>
+                        <p style="margin-top: 10px; opacity: 0.8;">All KPIs are within acceptable ranges</p>
                     </div>
                 `;
                 return;
@@ -798,29 +852,213 @@
             let html = `
                 <div class="alert-banner">
                     <h2>⚠️ ${flags.length} Red Flags Detected - Action Required</h2>
+                    <p style="margin-top: 10px; opacity: 0.9;">Issues found across ${new Set(flags.map(f => f.source)).size} departments</p>
+                </div>
             `;
             
             flags.forEach(flag => {
                 html += `
                     <div class="alert-item">
-                        <strong>${flag.Category} - ${flag.Title}:</strong> ${flag.Description}
-                        <div style="margin-top: 8px; font-size: 14px; color: #4a5568;">
-                            ${flag.Details || ''}
+                        <strong>${flag.source} - ${flag.entity}:</strong> ${flag.status}
+                        <div style="margin-top: 8px; font-size: 13px; color: #64748b;">
+                            Date: ${formatDisplayDate(flag.date)}
+                        </div>
+                `;
+                
+                // Show key details from the row
+                Object.keys(flag.data).forEach(key => {
+                    if (key !== 'Date' && key !== 'Status' && key !== 'Flag' && key !== 'Alert' && flag.data[key]) {
+                        html += `<div style="margin-top: 4px; font-size: 13px;"><strong>${key}:</strong> ${flag.data[key]}</div>`;
+                    }
+                });
+                
+                html += `</div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderCapacity() {
+            const container = document.getElementById('capacityContent');
+            
+            const csTeamRaw = dashboardData.csTeam || [];
+            const csTeam = getLatestPerEntity(filterByDate(csTeamRaw), 'Name');
+            
+            const veRaw = dashboardData.videoEditors || [];
+            const ve = getLatestPerEntity(filterByDate(veRaw), 'Name');
+            
+            const csRaw = dashboardData.creativeStrategist || [];
+            const cs = getLatestPerEntity(filterByDate(csRaw), 'Name');
+            
+            const disputesRaw = dashboardData.disputes || [];
+            const disputes = getLatestPerEntity(filterByDate(disputesRaw), 'Handler');
+            
+            // Calculate capacity metrics
+            const csCapacity = calculateTeamCapacity(csTeam, 'Messages');
+            const veCapacity = calculateTeamCapacity(ve, 'VideosToday');
+            const csCapacityCalc = calculateTeamCapacity(cs, 'ScriptsToday');
+            const disputesCapacity = calculateTeamCapacity(disputes, 'ManualToday');
+            
+            let html = `
+                <div class="team-section">
+                    <h3>📊 Team Capacity Overview</h3>
+                    <p style="margin-bottom: 20px; color: #718096;">
+                        Capacity = (Hours Worked Today / 8 hours) × 100<br>
+                        <strong>100%+</strong> = Overloaded | <strong>80-100%</strong> = Healthy | <strong><80%</strong> = Underloaded
+                    </p>
+                </div>
+            `;
+            
+            // CS Team Capacity
+            if (csTeam.length > 0) {
+                html += `
+                    <div class="capacity-card">
+                        <h3>📞 CS Team Capacity</h3>
+                        <div class="capacity-grid">
+                            <div class="capacity-item">
+                                <div class="capacity-label">Team Size</div>
+                                <div class="capacity-value">${csTeam.length}</div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Capacity</div>
+                                <div class="capacity-value">${csCapacity.avgCapacity}%</div>
+                                <div class="capacity-status ${csCapacity.avgCapacity >= 100 ? 'critical' : csCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
+                                    ${csCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : csCapacity.avgCapacity >= 80 ? '🟢 Healthy' : csCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Hours/Day</div>
+                                <div class="capacity-value">${csCapacity.avgHours}</div>
+                                <div class="capacity-status ${csCapacity.avgHours >= 8 ? 'critical' : csCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
+                                    ${csCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : csCapacity.avgHours >= 6.4 ? '✓ Normal' : '📉 Low hours'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Recommendation</div>
+                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
+                                    ${csCapacity.recommendation}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
-            });
+            }
             
-            html += `</div>`;
-            
-            const priorities = flags.filter(f => f.Action).map(f => f.Action);
-            if (priorities.length > 0) {
+            // Disputes Capacity
+            if (disputes.length > 0) {
                 html += `
-                    <div class="note">
-                        <strong>💡 Priority Actions:</strong>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            ${priorities.map(p => `<li>${p}</li>`).join('')}
-                        </ul>
+                    <div class="capacity-card">
+                        <h3>⚖️ Disputes Team Capacity</h3>
+                        <div class="capacity-grid">
+                            <div class="capacity-item">
+                                <div class="capacity-label">Team Size</div>
+                                <div class="capacity-value">${disputes.length}</div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Capacity</div>
+                                <div class="capacity-value">${disputesCapacity.avgCapacity}%</div>
+                                <div class="capacity-status ${disputesCapacity.avgCapacity >= 100 ? 'critical' : disputesCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
+                                    ${disputesCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : disputesCapacity.avgCapacity >= 80 ? '🟢 Healthy' : disputesCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Hours/Day</div>
+                                <div class="capacity-value">${disputesCapacity.avgHours}</div>
+                                <div class="capacity-status ${disputesCapacity.avgHours >= 8 ? 'critical' : disputesCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
+                                    ${disputesCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Recommendation</div>
+                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
+                                    ${disputesCapacity.recommendation}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Video Editors Capacity
+            if (ve.length > 0) {
+                html += `
+                    <div class="capacity-card">
+                        <h3>🎥 Video Editors Capacity</h3>
+                        <div class="capacity-grid">
+                            <div class="capacity-item">
+                                <div class="capacity-label">Team Size</div>
+                                <div class="capacity-value">${ve.length}</div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Capacity</div>
+                                <div class="capacity-value">${veCapacity.avgCapacity}%</div>
+                                <div class="capacity-status ${veCapacity.avgCapacity >= 100 ? 'critical' : veCapacity.avgCapacity >= 80 ? 'good' : 'warning'}">
+                                    ${veCapacity.avgCapacity >= 100 ? '🔴 Overloaded' : veCapacity.avgCapacity >= 80 ? '🟢 Healthy' : veCapacity.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Hours/Day</div>
+                                <div class="capacity-value">${veCapacity.avgHours}</div>
+                                <div class="capacity-status ${veCapacity.avgHours >= 8 ? 'critical' : veCapacity.avgHours >= 6.4 ? 'good' : 'warning'}">
+                                    ${veCapacity.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Videos Today</div>
+                                <div class="capacity-value">${veCapacity.totalOutput}</div>
+                                <div class="capacity-status good">
+                                    Avg: ${veCapacity.avgPerPerson}/person
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Recommendation</div>
+                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
+                                    ${veCapacity.recommendation}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Creative Strategist Capacity
+            if (cs.length > 0) {
+                html += `
+                    <div class="capacity-card">
+                        <h3>✍️ Creative Strategist Capacity</h3>
+                        <div class="capacity-grid">
+                            <div class="capacity-item">
+                                <div class="capacity-label">Team Size</div>
+                                <div class="capacity-value">${cs.length}</div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Capacity</div>
+                                <div class="capacity-value">${csCapacityCalc.avgCapacity}%</div>
+                                <div class="capacity-status ${csCapacityCalc.avgCapacity >= 100 ? 'critical' : csCapacityCalc.avgCapacity >= 80 ? 'good' : 'warning'}">
+                                    ${csCapacityCalc.avgCapacity >= 100 ? '🔴 Overloaded' : csCapacityCalc.avgCapacity >= 80 ? '🟢 Healthy' : csCapacityCalc.avgCapacity > 0 ? '🟡 Underloaded' : '⚠️ No data'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Avg Hours/Day</div>
+                                <div class="capacity-value">${csCapacityCalc.avgHours}</div>
+                                <div class="capacity-status ${csCapacityCalc.avgHours >= 8 ? 'critical' : csCapacityCalc.avgHours >= 6.4 ? 'good' : 'warning'}">
+                                    ${csCapacityCalc.avgHours >= 8 ? '⚠️ At/Over limit' : '✓ Normal'}
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Scripts Today</div>
+                                <div class="capacity-value">${csCapacityCalc.totalOutput}</div>
+                                <div class="capacity-status good">
+                                    Avg: ${csCapacityCalc.avgPerPerson}/person
+                                </div>
+                            </div>
+                            <div class="capacity-item">
+                                <div class="capacity-label">Recommendation</div>
+                                <div class="capacity-value" style="font-size: 14px; line-height: 1.4;">
+                                    ${csCapacityCalc.recommendation}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
             }
@@ -828,415 +1066,147 @@
             container.innerHTML = html;
         }
 
-        function renderHomeOffice() {
-            const container = document.getElementById('homeOfficeContent');
+        function calculateTeamCapacity(team, outputCol) {
+            if (!team || team.length === 0) {
+                return {
+                    avgCapacity: 0,
+                    avgHours: 0,
+                    totalOutput: 0,
+                    avgPerPerson: 0,
+                    needsHiring: false,
+                    recommendation: 'No data',
+                    status: 'unknown'
+                };
+            }
             
+            let totalHours = 0;
+            let totalCapacity = 0;
+            let totalOutput = 0;
+            let peopleWithHours = 0;
+            
+            team.forEach(person => {
+                // Use HoursWorkedToday or HoursToday column
+                const hoursWorked = parseFloat(person.HoursWorkedToday || person.HoursToday || 0);
+                
+                if (hoursWorked > 0) {
+                    totalHours += hoursWorked;
+                    peopleWithHours++;
+                    
+                    // Calculate capacity: HoursWorked / 8 hours * 100
+                    const capacity = (hoursWorked / 8) * 100;
+                    totalCapacity += capacity;
+                }
+                
+                if (person[outputCol]) {
+                    totalOutput += parseFloat(person[outputCol]) || 0;
+                }
+            });
+            
+            const avgHours = peopleWithHours > 0 ? (totalHours / peopleWithHours).toFixed(1) : 0;
+            const avgCapacity = peopleWithHours > 0 ? Math.round(totalCapacity / peopleWithHours) : 0;
+            const avgPerPerson = (totalOutput / team.length).toFixed(1);
+            
+            // Apply user's logic:
+            // 100+% = Overloaded
+            // 90-100% = Still okay
+            // 80-90% = Still okay
+            // <80% = Underloaded
+            
+            let status = 'normal';
+            let needsHiring = false;
+            let recommendation = '✅ Team capacity is healthy';
+            
+            if (avgCapacity >= 100) {
+                status = 'overloaded';
+                needsHiring = true;
+                const extraPeople = Math.ceil((avgCapacity - 90) / 100 * team.length);
+                recommendation = `🔴 OVERLOADED - Hire +${extraPeople} ${extraPeople === 1 ? 'person' : 'people'} ASAP`;
+            } else if (avgCapacity >= 90) {
+                status = 'okay';
+                recommendation = '🟢 Team capacity is healthy (90-100%)';
+            } else if (avgCapacity >= 80) {
+                status = 'okay';
+                recommendation = '🟢 Team capacity is healthy (80-90%)';
+            } else if (avgCapacity > 0) {
+                status = 'underloaded';
+                recommendation = `🟡 Team underutilized (${avgCapacity}% capacity)`;
+            } else {
+                status = 'no-data';
+                recommendation = '⚠️ No hours data - Add "HoursWorkedToday" column';
+            }
+            
+            return {
+                avgCapacity,
+                avgHours: parseFloat(avgHours),
+                totalOutput,
+                avgPerPerson: parseFloat(avgPerPerson),
+                needsHiring,
+                recommendation,
+                status
+            };
+        }
+
+        function renderCS() {
+            const container = document.getElementById('csContent');
             const csTeamRaw = dashboardData.csTeam || [];
             const csTeamFiltered = filterByDate(csTeamRaw);
             const csTeam = getLatestPerEntity(csTeamFiltered, 'Name');
             
+            container.innerHTML = renderDynamicTable(csTeam, 'Customer Service Team', '📞');
+        }
+
+        function renderDisputes() {
+            const container = document.getElementById('disputesContent');
             const disputesRaw = dashboardData.disputes || [];
             const disputesFiltered = filterByDate(disputesRaw);
             const disputes = getLatestPerEntity(disputesFiltered, 'Handler');
             
-            const campaignsRaw = dashboardData.campaigns || [];
-            const campaigns = filterByDate(campaignsRaw);
+            container.innerHTML = renderDynamicTable(disputes, 'Dispute Management', '⚖️');
+        }
+
+        function renderCreativeStrategist() {
+            const container = document.getElementById('creativeStrategistContent');
+            const csRaw = dashboardData.creativeStrategist || [];
+            const csFiltered = filterByDate(csRaw);
+            const cs = getLatestPerEntity(csFiltered, 'Name');
             
+            container.innerHTML = renderDynamicTable(cs, 'Creative Strategists', '✍️');
+        }
+
+        function renderVideoEditors() {
+            const container = document.getElementById('videoEditorsContent');
+            const veRaw = dashboardData.videoEditors || [];
+            const veFiltered = filterByDate(veRaw);
+            const ve = getLatestPerEntity(veFiltered, 'Name');
+            
+            container.innerHTML = renderDynamicTable(ve, 'Video Editors', '🎥');
+        }
+
+        function renderFunnelBuilders() {
+            const container = document.getElementById('funnelBuildersContent');
             const funnelsRaw = dashboardData.funnels || [];
             const funnels = filterByDate(funnelsRaw);
             
-            let html = `
-                <div class="team-section">
-                    <h3>🏢 Home Office Team Performance</h3>
-                    <p style="margin-bottom: 20px; color: #718096;">CS Team, Dispute Management, Support Functions</p>
-                </div>
-
-                <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">📞 Customer Service Team</h4>
-            `;
-            
-            if (csTeam.length > 0) {
-                const totalMessages = csTeam.reduce((sum, p) => sum + (parseInt(p.Messages) || 0), 0);
-                const avgWorkload = Math.round(csTeam.reduce((sum, p) => sum + (parseInt(p.Workload) || 0), 0) / csTeam.length);
-                
-                html += `
-                    <div class="workload-card">
-                        <h3>📊 Workload & Capacity</h3>
-                        <div class="workload-grid">
-                            <div class="workload-item">
-                                <div class="workload-label">Total Messages</div>
-                                <div class="workload-value">${totalMessages}</div>
-                            </div>
-                            <div class="workload-item">
-                                <div class="workload-label">Team Members</div>
-                                <div class="workload-value">${csTeam.length}</div>
-                            </div>
-                            <div class="workload-item">
-                                <div class="workload-label">Avg Workload</div>
-                                <div class="workload-value">${avgWorkload}%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="team-section">
-                        <h3>CS Team - Performance</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Team Member</th>
-                                    <th>Messages</th>
-                                    <th>Workload</th>
-                                    <th>First Response</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                csTeam.forEach(person => {
-                    const workload = parseInt(person.Workload) || 0;
-                    const statusClass = workload > 85 ? 'red' : workload > 75 ? 'yellow' : 'green';
-                    const statusText = workload > 85 ? 'Overloaded' : workload > 75 ? 'High Load' : 'On Track';
-                    
-                    html += `
-                        <tr>
-                            <td><span class="person-name">${person.Name}</span></td>
-                            <td>${person.Messages}</td>
-                            <td>${person.Workload}% ${workload > 85 ? '🔴' : ''}</td>
-                            <td>${person.FirstResponse}</td>
-                            <td><span class="indicator ${statusClass}"></span>${statusText}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-            
-            // Disputes section
-            if (disputes.length > 0) {
-                html += `
-                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">⚖️ Dispute Management</h4>
-                    
-                    <div class="team-section">
-                        <h3>Dispute Team - Workload</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Handler</th>
-                                    <th>Processor</th>
-                                    <th>Manual Today</th>
-                                    <th>Workload</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                disputes.forEach(person => {
-                    const workload = parseInt(person.Workload) || 0;
-                    const statusClass = workload > 75 ? 'yellow' : 'green';
-                    
-                    html += `
-                        <tr>
-                            <td><span class="person-name">${person.Handler}</span></td>
-                            <td>${person.Processor}</td>
-                            <td>${person.ManualToday}</td>
-                            <td>${person.Workload}%</td>
-                            <td><span class="indicator ${statusClass}"></span>${person.Status}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-            
-            // Campaigns section
-            if (campaigns.length > 0) {
-                const errors = campaigns.filter(c => c.ErrorDetails);
-                
-                html += `
-                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">📧 Campaigns</h4>
-                    
-                    <div class="metrics-grid">
-                        <div class="metric-card blue">
-                            <div class="metric-label">Total Campaigns</div>
-                            <div class="metric-value">${campaigns.length}</div>
-                            <div class="metric-target">In selected date range</div>
-                            <span class="status-badge blue">Active</span>
-                        </div>
-                        <div class="metric-card ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
-                            <div class="metric-label">Errors</div>
-                            <div class="metric-value">${errors.length}</div>
-                            <div class="metric-target">Target: <2 errors</div>
-                            <span class="status-badge ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
-                                ${errors.length > 2 ? 'Action Needed' : errors.length > 0 ? 'Watch' : 'Clean'}
-                            </span>
-                        </div>
-                    </div>
-                `;
-                
-                if (errors.length > 0) {
-                    html += `
-                        <div class="team-section">
-                            <h3>Campaign Errors</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Campaign</th>
-                                        <th>Error</th>
-                                        <th>Fix Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-                    
-                    errors.forEach(error => {
-                        html += `
-                            <tr>
-                                <td>${error.Date}</td>
-                                <td>${error.Campaign}</td>
-                                <td>${error.ErrorDetails}</td>
-                                <td>${error.FixTime}</td>
-                                <td><span class="indicator green"></span>Fixed</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-            }
-            
-            // Funnels section
-            if (funnels.length > 0) {
-                const assigned = funnels.reduce((sum, f) => sum + (parseInt(f.Assigned) || 0), 0);
-                const completed = funnels.reduce((sum, f) => sum + (parseInt(f.Completed) || 0), 0);
-                const errors = funnels.filter(f => f.ErrorDetails);
-                
-                html += `
-                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">🎯 Funnels</h4>
-                    
-                    <div class="metrics-grid">
-                        <div class="metric-card blue">
-                            <div class="metric-label">Funnels Assigned</div>
-                            <div class="metric-value">${assigned}</div>
-                            <div class="metric-target">In selected date range</div>
-                        </div>
-                        <div class="metric-card green">
-                            <div class="metric-label">Funnels Completed</div>
-                            <div class="metric-value">${completed}</div>
-                            <div class="metric-target">Completion rate: ${assigned > 0 ? Math.round((completed/assigned)*100) : 0}%</div>
-                        </div>
-                        <div class="metric-card ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
-                            <div class="metric-label">Errors</div>
-                            <div class="metric-value">${errors.length}</div>
-                            <div class="metric-target">Target: <2 errors</div>
-                        </div>
-                    </div>
-                `;
-                
-                if (errors.length > 0) {
-                    html += `
-                        <div class="team-section">
-                            <h3>Funnel Errors</h3>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Funnel</th>
-                                        <th>Error</th>
-                                        <th>Fix Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-                    
-                    errors.forEach(error => {
-                        html += `
-                            <tr>
-                                <td>${error.Date}</td>
-                                <td>${error.Funnel}</td>
-                                <td>${error.ErrorDetails}</td>
-                                <td>${error.FixTime}</td>
-                                <td><span class="indicator green"></span>Fixed</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                }
-            }
-            
-            container.innerHTML = html;
+            container.innerHTML = renderDynamicTable(funnels, 'Funnel Builders', '🎯');
         }
 
-        function renderBranchOps() {
-            const container = document.getElementById('branchOpsContent');
+        function renderCampaignLauncher() {
+            const container = document.getElementById('campaignLauncherContent');
+            const campaignsRaw = dashboardData.campaigns || [];
+            const campaigns = filterByDate(campaignsRaw);
             
-            const branchesRaw = dashboardData.branches || [];
-            const branchesFiltered = filterByDate(branchesRaw);
-            const branches = getLatestPerEntity(branchesFiltered, 'Name');
-            
-            const videoEditorsRaw = dashboardData.videoEditors || [];
-            const videoEditorsFiltered = filterByDate(videoEditorsRaw);
-            const videoEditors = getLatestPerEntity(videoEditorsFiltered, 'Name');
-            
-            let html = `
-                <div class="team-section">
-                    <h3>🎬 Branch Operations Overview</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Branch</th>
-                                <th>Scripts Today</th>
-                                <th>Videos Today</th>
-                                <th>Backlog</th>
-                                <th>Team Size</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            branches.forEach(branch => {
-                const scripts = parseFloat(branch.ScriptsToday) || 0;
-                const videos = parseFloat(branch.VideosToday) || 0;
-                const ratio = scripts > 0 ? videos / scripts : 1;
-                const statusClass = ratio >= 0.95 ? 'green' : ratio >= 0.7 ? 'yellow' : 'red';
-                const statusText = ratio >= 0.95 ? 'Balanced' : ratio >= 0.7 ? 'Watch' : 'Bottleneck';
-                
-                html += `
-                    <tr>
-                        <td><span class="person-name">${branch.Name}</span></td>
-                        <td>${branch.ScriptsToday}</td>
-                        <td>${branch.VideosToday} ${ratio < 0.7 ? '🔴' : ''}</td>
-                        <td>${branch.Backlog}</td>
-                        <td>${branch.TeamSize}</td>
-                        <td><span class="indicator ${statusClass}"></span>${statusText}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            // Video Editors section
-            if (videoEditors.length > 0) {
-                html += `
-                    <div class="team-section" style="margin-top: 30px;">
-                        <h3>🎥 Video Editors Performance</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Branch</th>
-                                    <th>Videos Today</th>
-                                    <th>Target</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                `;
-                
-                videoEditors.forEach(editor => {
-                    const videos = parseFloat(editor.VideosToday) || 0;
-                    const statusClass = editor.Status === 'On Track' || editor.Status === 'Acceptable' ? 'green' : 
-                                      editor.Status === 'Watch' ? 'yellow' : 'red';
-                    
-                    html += `
-                        <tr>
-                            <td><span class="person-name">${editor.Name}</span></td>
-                            <td>${editor.Branch}</td>
-                            <td>${editor.VideosToday}</td>
-                            <td>${editor.Target}</td>
-                            <td><span class="indicator ${statusClass}"></span>${editor.Status}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            }
-            
-            container.innerHTML = html;
+            container.innerHTML = renderDynamicTable(campaigns, 'Campaign Launcher', '📧');
         }
 
-        function renderHiring() {
-            const container = document.getElementById('hrHiringContent');
-            
+        function renderHR() {
+            const container = document.getElementById('hrContent');
             const hiringRaw = dashboardData.hiring || [];
             const hiringFiltered = filterByDate(hiringRaw);
             const hiring = getLatestPerEntity(hiringFiltered, 'Position');
             
-            let html = `
-                <div class="team-section">
-                    <h3>👥 Open Positions</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Position</th>
-                                <th>Department</th>
-                                <th>Days Open</th>
-                                <th>Candidates</th>
-                                <th>Stage</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            hiring.forEach(position => {
-                const daysOpen = parseInt(position.DaysOpen) || 0;
-                const statusClass = daysOpen > 40 ? 'red' : daysOpen > 25 ? 'yellow' : 'green';
-                
-                html += `
-                    <tr>
-                        <td><span class="person-name">${position.Position}</span></td>
-                        <td>${position.Department}</td>
-                        <td>${position.DaysOpen} days ${daysOpen > 40 ? '🔴' : daysOpen > 25 ? '🟡' : ''}</td>
-                        <td>${position.Candidates}</td>
-                        <td>${position.Stage}</td>
-                        <td><span class="indicator ${statusClass}"></span>${position.Status}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            
-            container.innerHTML = html;
+            container.innerHTML = renderDynamicTable(hiring, 'HR & Hiring', '👥');
         }
 
-        // ========================================
-        // UTILITY FUNCTIONS
-        // ========================================
-        
         function showLoading(show) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
@@ -1258,15 +1228,10 @@
             event.target.classList.add('active');
         }
 
-        // ========================================
-        // AUTO-REFRESH
-        // ========================================
-        
         setInterval(() => {
             loadAllData();
-        }, 5 * 60 * 1000); // 5 minutes
+        }, 5 * 60 * 1000);
 
-        // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
             initializeDateFilter();
             loadAllData();
