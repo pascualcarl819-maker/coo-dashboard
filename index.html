@@ -42,6 +42,95 @@
             margin-top: 10px;
         }
 
+        .sync-status {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .sync-status.syncing {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .sync-status.synced {
+            background: #34d399;
+            color: #064e3b;
+        }
+
+        .sync-status.error {
+            background: #f87171;
+            color: #7f1d1d;
+        }
+
+        /* Date Filter Styles */
+        .date-filter {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .date-filter label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .date-filter input[type="date"] {
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .date-filter input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .date-filter button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .date-filter button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .date-filter button.reset {
+            background: #94a3b8;
+        }
+
+        .date-filter button.reset:hover {
+            background: #64748b;
+        }
+
+        .date-filter-info {
+            margin-left: auto;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         .tabs {
             display: flex;
             gap: 10px;
@@ -76,6 +165,41 @@
 
         .tab-content.active {
             display: block;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .alert-banner {
@@ -148,6 +272,14 @@
             border-left-color: #f56565;
         }
 
+        .metric-card.blue {
+            border-left-color: #4299e1;
+        }
+
+        .metric-card.purple {
+            border-left-color: #9f7aea;
+        }
+
         .metric-label {
             font-size: 14px;
             color: #718096;
@@ -172,6 +304,14 @@
             color: #c53030;
         }
 
+        .metric-card.blue .metric-value {
+            color: #2c5282;
+        }
+
+        .metric-card.purple .metric-value {
+            color: #553c9a;
+        }
+
         .metric-target {
             font-size: 13px;
             color: #a0aec0;
@@ -181,14 +321,6 @@
             font-size: 13px;
             font-weight: 600;
             margin-top: 8px;
-        }
-
-        .metric-change.up {
-            color: #48bb78;
-        }
-
-        .metric-change.down {
-            color: #f56565;
         }
 
         .status-badge {
@@ -213,6 +345,54 @@
         .status-badge.red {
             background: #fed7d7;
             color: #c53030;
+        }
+
+        .status-badge.blue {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .status-badge.purple {
+            background: #e9d8fd;
+            color: #553c9a;
+        }
+
+        .workload-card {
+            background: #edf2f7;
+            border-left: 4px solid #4299e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .workload-card h3 {
+            color: #2c5282;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .workload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .workload-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .workload-label {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 4px;
+        }
+
+        .workload-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
         }
 
         .team-section {
@@ -278,6 +458,10 @@
             background: #f56565;
         }
 
+        .indicator.blue {
+            background: #4299e1;
+        }
+
         .note {
             background: #edf2f7;
             padding: 16px;
@@ -304,540 +488,789 @@
             th, td {
                 padding: 8px;
             }
+
+            .date-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .date-filter-info {
+                margin-left: 0;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p style="color: #4a5568; font-weight: 600;">Loading dashboard data...</p>
+        </div>
+    </div>
+
     <div class="dashboard-header">
         <h1>📊 Ecommate COO Dashboard</h1>
-        <p>Operations at a glance - Check daily in 5 minutes</p>
-        <div class="last-updated">Last updated: December 7, 2024 at 6:05 PM</div>
+        <p>Performance KPIs + Workload Visibility + Capacity Planning</p>
+        <div class="last-updated">Last updated: <span id="lastUpdated">Loading...</span></div>
+        <div class="sync-status synced" id="syncStatus">
+            ✓ Synced with Google Sheets
+        </div>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="date-filter">
+        <label for="startDate">📅 From:</label>
+        <input type="date" id="startDate" />
+        
+        <label for="endDate">To:</label>
+        <input type="date" id="endDate" />
+        
+        <button onclick="applyDateFilter()">Apply Filter</button>
+        <button class="reset" onclick="resetDateFilter()">Show All</button>
+        
+        <div class="date-filter-info" id="filterInfo">
+            Showing all data
+        </div>
     </div>
 
     <div class="tabs">
         <div class="tab active" onclick="showTab('red-flags')">🚨 Red Flags</div>
-        <div class="tab" onclick="showTab('cs-team')">📞 CS Team</div>
-        <div class="tab" onclick="showTab('disputes')">⚖️ Disputes</div>
-        <div class="tab" onclick="showTab('video-editors')">🎬 Video Editors</div>
-        <div class="tab" onclick="showTab('media-buying')">📈 Media Buying</div>
-        <div class="tab" onclick="showTab('weekly')">📅 Weekly Updates</div>
+        <div class="tab" onclick="showTab('home-office')">🏢 Home Office</div>
+        <div class="tab" onclick="showTab('branch-operations')">🎬 Branch Operations</div>
+        <div class="tab" onclick="showTab('hr-hiring')">👥 HR & Hiring</div>
     </div>
 
-    <!-- RED FLAGS TAB -->
+    <!-- All tab content will be populated dynamically -->
     <div id="red-flags" class="tab-content active">
-        <!-- EXAMPLE 1: When there ARE red flags -->
-        <div class="alert-banner">
-            <h2>⚠️ 3 Red Flags Detected - Action Required</h2>
-            
-            <div class="alert-item">
-                <strong>CS Team - Eve:</strong> First response time 04:32:15 (Target: <02:00:00)
-                <div style="margin-top: 8px; font-size: 14px; color: #4a5568;">
-                    Status has been red for 2 consecutive days
-                </div>
-            </div>
-
-            <div class="alert-item">
-                <strong>Video Editor - Boni (EU1):</strong> Only 1 video delivered today (Target: 3-5)
-                <div style="margin-top: 8px; font-size: 14px; color: #4a5568;">
-                    3 consecutive days below target
-                </div>
-            </div>
-
-            <div class="alert-item">
-                <strong>Disputes - Maria:</strong> PayPal win rate 65% (Target: >80%)
-                <div style="margin-top: 8px; font-size: 14px; color: #4a5568;">
-                    Weekly average down from 82% last week
-                </div>
-            </div>
-        </div>
-
-        <!-- EXAMPLE 2: When everything is green (uncomment to show) -->
-        <!--
-        <div class="success-banner">
-            <h2>✅ All Systems Green - No Action Needed</h2>
-            <p style="margin-top: 10px; color: #2f855a;">Every metric is on target. You're done for today!</p>
-        </div>
-        -->
-
-        <div class="note">
-            <strong>💡 How this works:</strong> If this section is empty or shows "All Systems Green," you're done checking the dashboard for the day. Only when red flags appear do you need to take action by contacting the relevant department lead.
-        </div>
+        <div id="redFlagsContent"></div>
     </div>
 
-    <!-- CS TEAM TAB -->
-    <div id="cs-team" class="tab-content">
-        <div class="metrics-grid">
-            <div class="metric-card green">
-                <div class="metric-label">Messages Sent Today</div>
-                <div class="metric-value">247</div>
-                <div class="metric-target">Target: 200+ daily</div>
-                <div class="metric-change up">↑ 12% from yesterday</div>
-                <span class="status-badge green">On Track</span>
-            </div>
-
-            <div class="metric-card red">
-                <div class="metric-label">Avg First Response Time</div>
-                <div class="metric-value">02:45:32</div>
-                <div class="metric-target">Target: <02:00:00</div>
-                <div class="metric-change down">↓ 45min slower than target</div>
-                <span class="status-badge red">Action Needed</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">Avg Resolution Time</div>
-                <div class="metric-value">04:12:18</div>
-                <div class="metric-target">Target: <06:00:00</div>
-                <div class="metric-change up">↑ 18% faster than yesterday</div>
-                <span class="status-badge green">On Track</span>
-            </div>
-
-            <div class="metric-card yellow">
-                <div class="metric-label">Open Tickets</div>
-                <div class="metric-value">34</div>
-                <div class="metric-target">Target: <30</div>
-                <div class="metric-change down">↑ 4 more than yesterday</div>
-                <span class="status-badge yellow">Watch Closely</span>
-            </div>
-        </div>
-
-        <div class="team-section">
-            <h3>Individual Performance (December 7)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Team Member</th>
-                        <th>Messages Sent</th>
-                        <th>First Response</th>
-                        <th>Resolution Time</th>
-                        <th>Open Tickets</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="person-name">Crizz</span></td>
-                        <td>89</td>
-                        <td>01:32:45</td>
-                        <td>03:48:12</td>
-                        <td>12</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Eve</span></td>
-                        <td>82</td>
-                        <td>04:32:15</td>
-                        <td>05:12:33</td>
-                        <td>15</td>
-                        <td><span class="indicator red"></span>Action Needed</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Danielle</span></td>
-                        <td>76</td>
-                        <td>01:48:22</td>
-                        <td>03:32:09</td>
-                        <td>7</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="note">
-            <strong>🔴 Red Flag:</strong> Eve's first response time is significantly above target for 2 consecutive days. Action: Contact Joe to discuss.
-        </div>
+    <div id="home-office" class="tab-content">
+        <div id="homeOfficeContent"></div>
     </div>
 
-    <!-- DISPUTES TAB -->
-    <div id="disputes" class="tab-content">
-        <div class="metrics-grid">
-            <div class="metric-card green">
-                <div class="metric-label">New Disputes Today</div>
-                <div class="metric-value">18</div>
-                <div class="metric-target">Average: 15-20 daily</div>
-                <div class="metric-change up">Normal range</div>
-                <span class="status-badge green">Normal</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">Disputes Resolved</div>
-                <div class="metric-value">22</div>
-                <div class="metric-target">Target: 15+ daily</div>
-                <div class="metric-change up">↑ 47% above target</div>
-                <span class="status-badge green">Excellent</span>
-            </div>
-
-            <div class="metric-card red">
-                <div class="metric-label">Win Rate (7-day avg)</div>
-                <div class="metric-value">73%</div>
-                <div class="metric-target">Target: >80%</div>
-                <div class="metric-change down">↓ 9% below target</div>
-                <span class="status-badge red">Action Needed</span>
-            </div>
-
-            <div class="metric-card yellow">
-                <div class="metric-label">Total Open Disputes</div>
-                <div class="metric-value">47</div>
-                <div class="metric-target">Target: <40</div>
-                <div class="metric-change down">↑ 7 above target</div>
-                <span class="status-badge yellow">Watch Closely</span>
-            </div>
-        </div>
-
-        <div class="team-section">
-            <h3>Dispute Breakdown by Payment Processor</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Processor</th>
-                        <th>Handler</th>
-                        <th>New Today</th>
-                        <th>Resolved</th>
-                        <th>Win Rate</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Stripe</td>
-                        <td><span class="person-name">Dexie</span></td>
-                        <td>8</td>
-                        <td>12</td>
-                        <td>85%</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td>PayPal</td>
-                        <td><span class="person-name">Maria</span></td>
-                        <td>6</td>
-                        <td>5</td>
-                        <td>65%</td>
-                        <td><span class="indicator red"></span>Below Target</td>
-                    </tr>
-                    <tr>
-                        <td>PayPal</td>
-                        <td><span class="person-name">Rafael</span></td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>78%</td>
-                        <td><span class="indicator yellow"></span>Watch</td>
-                    </tr>
-                    <tr>
-                        <td>PayARC</td>
-                        <td><span class="person-name">Jeric</span></td>
-                        <td>1</td>
-                        <td>1</td>
-                        <td>100%</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="note">
-            <strong>🔴 Red Flag:</strong> Maria's PayPal win rate dropped from 82% last week to 65% this week. Action: Contact Joe to investigate pattern and provide additional training/support.
-        </div>
+    <div id="branch-operations" class="tab-content">
+        <div id="branchOpsContent"></div>
     </div>
 
-    <!-- VIDEO EDITORS TAB -->
-    <div id="video-editors" class="tab-content">
-        <div class="metrics-grid">
-            <div class="metric-card green">
-                <div class="metric-label">Total Videos Delivered Today</div>
-                <div class="metric-value">42</div>
-                <div class="metric-target">Target: 36-60 daily (12 editors)</div>
-                <div class="metric-change up">↑ 17% above minimum</div>
-                <span class="status-badge green">On Track</span>
-            </div>
-
-            <div class="metric-card yellow">
-                <div class="metric-label">Avg Videos per Editor</div>
-                <div class="metric-value">3.5</div>
-                <div class="metric-target">Target: 3-5 per day</div>
-                <div class="metric-change up">Within range</div>
-                <span class="status-badge yellow">Normal</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">On-Time Delivery Rate</div>
-                <div class="metric-value">92%</div>
-                <div class="metric-target">Target: >90%</div>
-                <div class="metric-change up">↑ 2% from yesterday</div>
-                <span class="status-badge green">Excellent</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">CS Approval Rate</div>
-                <div class="metric-value">88%</div>
-                <div class="metric-target">Target: >85%</div>
-                <div class="metric-change up">↑ 3% from yesterday</div>
-                <span class="status-badge green">On Track</span>
-            </div>
-        </div>
-
-        <div class="team-section">
-            <h3>US Branch 1</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Editor</th>
-                        <th>Videos Delivered</th>
-                        <th>Revisions</th>
-                        <th>On-Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="person-name">Allie</span></td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Joriel</span></td>
-                        <td>5</td>
-                        <td>2</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Joshua</span></td>
-                        <td>3</td>
-                        <td>0</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Conrad</span></td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Brayley</span></td>
-                        <td>3</td>
-                        <td>1</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Mark</span></td>
-                        <td>4</td>
-                        <td>0</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="team-section">
-            <h3>EU Branch 1 - UK/DE (3 editors)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Editor</th>
-                        <th>Videos Delivered</th>
-                        <th>Revisions</th>
-                        <th>On-Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="person-name">Claudeth</span></td>
-                        <td>3</td>
-                        <td>1</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Boni</span></td>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>No</td>
-                        <td><span class="indicator red"></span>Below Target</td>
-                    </tr>
-                    <tr>
-                        <td><span class="person-name">Ellaine</span></td>
-                        <td>4</td>
-                        <td>1</td>
-                        <td>Yes</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="note">
-            <strong>🔴 Red Flag:</strong> Boni delivered only 1 video today, 3rd consecutive day below target. Action: Contact Kevin (EU lead) to check if there's a blocker or performance issue.
-        </div>
-    </div>
-
-    <!-- MEDIA BUYING TAB -->
-    <div id="media-buying" class="tab-content">
-        <div class="metrics-grid">
-            <div class="metric-card green">
-                <div class="metric-label">Total Ad Spend Today</div>
-                <div class="metric-value">€78.2K</div>
-                <div class="metric-target">Budget: €80K daily</div>
-                <div class="metric-change up">2% under budget (good)</div>
-                <span class="status-badge green">On Budget</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">Overall ROAS</div>
-                <div class="metric-value">3.2x</div>
-                <div class="metric-target">Target: >2.5x</div>
-                <div class="metric-change up">↑ 0.4x above target</div>
-                <span class="status-badge green">Excellent</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">Revenue Generated</div>
-                <div class="metric-value">€250.2K</div>
-                <div class="metric-target">Target: €200K+ daily</div>
-                <div class="metric-change up">↑ 25% above target</div>
-                <span class="status-badge green">Excellent</span>
-            </div>
-
-            <div class="metric-card green">
-                <div class="metric-label">Targeting Errors</div>
-                <div class="metric-value">0</div>
-                <div class="metric-target">Target: 0</div>
-                <div class="metric-change up">Perfect</div>
-                <span class="status-badge green">Clean</span>
-            </div>
-        </div>
-
-        <div class="team-section">
-            <h3>Branch Performance (December 7)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Branch</th>
-                        <th>Lead</th>
-                        <th>Ad Spend</th>
-                        <th>Revenue</th>
-                        <th>ROAS</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>US Branch 1 (OptiWatt)</td>
-                        <td><span class="person-name">Kylian</span></td>
-                        <td>$42.5K</td>
-                        <td>$136K</td>
-                        <td>3.2x</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td>US Branch 2 (Pelvic Ease)</td>
-                        <td><span class="person-name">Kylian</span></td>
-                        <td>$38.2K</td>
-                        <td>$122K</td>
-                        <td>3.2x</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td>EU Branch 1 (UK/DE)</td>
-                        <td><span class="person-name">Kevin</span></td>
-                        <td>€18.8K</td>
-                        <td>€60.5K</td>
-                        <td>3.2x</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                    <tr>
-                        <td>EU Branch 2 (UK/DE)</td>
-                        <td><span class="person-name">Kevin</span></td>
-                        <td>€19.2K</td>
-                        <td>€61.8K</td>
-                        <td>3.2x</td>
-                        <td><span class="indicator green"></span>On Track</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="note">
-            <strong>✅ All Green:</strong> Media buying performance is excellent across all branches. No action needed.
-        </div>
-    </div>
-
-    <!-- WEEKLY UPDATES TAB -->
-    <div id="weekly" class="tab-content">
-        <div class="team-section">
-            <h3>Grace - Facebook Manager (Week of Dec 2-6)</h3>
-            <p style="margin-bottom: 15px; color: #4a5568;">
-                <strong>Campaigns Launched:</strong> 8 campaigns<br>
-                <strong>Targeting Errors:</strong> 0<br>
-                <strong>Ad Account Issues:</strong> None<br>
-                <strong>Automation Status:</strong> All working
-            </p>
-            <p style="color: #4a5568;">
-                <strong>Next Week Priorities:</strong><br>
-                1. Launch Pelvic Ease UK expansion<br>
-                2. Complete campaign automation Sheet logging<br>
-                3. Test new creative angles with Kylian
-            </p>
-        </div>
-
-        <div class="team-section">
-            <h3>Mitch - HR Manager (Week of Dec 2-6)</h3>
-            <p style="margin-bottom: 15px; color: #4a5568;">
-                <strong>Open Roles:</strong> 2 (1 CS, 1 Video Editor)<br>
-                <strong>Candidates Sourced:</strong> 18<br>
-                <strong>First Interviews:</strong> 5<br>
-                <strong>Final Interviews:</strong> 2 (with Carl)<br>
-                <strong>Offers Extended:</strong> 1<br>
-                <strong>Hires Confirmed:</strong> 1
-            </p>
-            <p style="color: #4a5568;">
-                <strong>Bottlenecks:</strong> Video Editor role has been open 32 days, struggling to find qualified candidates in EU timezone<br>
-                <strong>Next Week Priorities:</strong><br>
-                1. Expand Video Editor sourcing to Philippines<br>
-                2. Close CS hire (offer accepted)<br>
-                3. Start sourcing for OPS Manager role
-            </p>
-        </div>
-
-        <div class="team-section">
-            <h3>Jake - Funnel Builder (Month of November)</h3>
-            <p style="margin-bottom: 15px; color: #4a5568;">
-                <strong>Conversion Rates:</strong><br>
-                • OptiWatt: 3.2% (stable)<br>
-                • Pelvic Ease: 2.8% (up 0.3% from Oct)<br>
-                • EU Funnels: 2.5% (stable)
-            </p>
-            <p style="color: #4a5568;">
-                <strong>A/B Tests Run:</strong> 2 tests on OptiWatt checkout flow - variant B won with 0.4% lift<br>
-                <strong>Next Month Priorities:</strong><br>
-                1. Implement winning checkout variant across all funnels<br>
-                2. Test new mobile-optimized landing page for EU<br>
-                3. Add upsell flow to Pelvic Ease
-            </p>
-        </div>
+    <div id="hr-hiring" class="tab-content">
+        <div id="hrHiringContent"></div>
     </div>
 
     <script>
-        function showTab(tabName) {
-            // Hide all tab contents
+        // ========================================
+        // CONFIGURATION
+        // ========================================
+        
+        const GOOGLE_SHEETS_ID = 'YOUR_SHEET_ID_HERE'; // Replace with your Sheet ID!
+        
+        const SHEETS = {
+            CS_TEAM: 'CS Team',
+            DISPUTES: 'Disputes',
+            CAMPAIGNS: 'Campaigns',
+            FUNNELS: 'Funnels',
+            BRANCHES: 'Branches',
+            VIDEO_EDITORS: 'Video Editors',
+            HIRING: 'Hiring',
+            RED_FLAGS: 'Red Flags'
+        };
+
+        // Global data store
+        let dashboardData = {};
+        
+        // ========================================
+        // DATE FILTERING
+        // ========================================
+        
+        let startDateFilter = null;
+        let endDateFilter = null;
+        
+        // Initialize date filter with last 7 days
+        function initializeDateFilter() {
+            const today = new Date();
+            const lastWeek = new Date();
+            lastWeek.setDate(today.getDate() - 7);
+            
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
+            
+            // Apply filter by default
+            applyDateFilter();
+        }
+        
+        // Apply date filter
+        function applyDateFilter() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('Start date must be before end date');
+                return;
+            }
+            
+            startDateFilter = new Date(startDate);
+            endDateFilter = new Date(endDate);
+            
+            // Update filter info
+            const startFormatted = new Date(startDate).toLocaleDateString();
+            const endFormatted = new Date(endDate).toLocaleDateString();
+            document.getElementById('filterInfo').textContent = 
+                `Showing: ${startFormatted} to ${endFormatted}`;
+            
+            // Re-render all sections
+            renderRedFlags();
+            renderHomeOffice();
+            renderBranchOps();
+            renderHiring();
+            
+            console.log('Date filter applied:', startDate, 'to', endDate);
+        }
+        
+        // Reset date filter
+        function resetDateFilter() {
+            startDateFilter = null;
+            endDateFilter = null;
+            
+            document.getElementById('filterInfo').textContent = 'Showing all data';
+            
+            // Re-render all sections
+            renderRedFlags();
+            renderHomeOffice();
+            renderBranchOps();
+            renderHiring();
+            
+            console.log('Date filter reset');
+        }
+        
+        // Filter data by date
+        function filterByDate(data) {
+            if (!startDateFilter || !endDateFilter) {
+                return data;
+            }
+            
+            return data.filter(row => {
+                const rowDate = parseDate(row.Date);
+                if (!rowDate) return false;
+                
+                return rowDate >= startDateFilter && rowDate <= endDateFilter;
+            });
+        }
+        
+        // Parse date string
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            
+            let date;
+            
+            if (dateStr.includes('-')) {
+                date = new Date(dateStr);
+            } else if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                const month = parseInt(parts[0]) - 1;
+                const day = parseInt(parts[1]);
+                const year = parts[2] ? parseInt(parts[2]) : new Date().getFullYear();
+                const fullYear = year < 100 ? 2000 + year : year;
+                date = new Date(fullYear, month, day);
+            } else {
+                return null;
+            }
+            
+            return isNaN(date.getTime()) ? null : date;
+        }
+        
+        // Get latest entry per entity
+        function getLatestPerEntity(data, entityKey = 'Name') {
+            if (!data || data.length === 0) return [];
+            
+            const latestMap = new Map();
+            
+            data.forEach(row => {
+                const entity = row[entityKey];
+                const date = parseDate(row.Date);
+                
+                if (!entity || !date) return;
+                
+                const existing = latestMap.get(entity);
+                if (!existing || date > parseDate(existing.Date)) {
+                    latestMap.set(entity, row);
+                }
+            });
+            
+            return Array.from(latestMap.values());
+        }
+
+        // ========================================
+        // DATA FETCHING
+        // ========================================
+        
+        async function fetchSheetData(sheetName, range = 'A:Z') {
+            const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}&range=${range}`;
+            
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                
+                const headers = json.table.cols.map(col => col.label || col.id);
+                const rows = json.table.rows.map(row => {
+                    const obj = {};
+                    row.c.forEach((cell, i) => {
+                        obj[headers[i]] = cell ? cell.v : null;
+                    });
+                    return obj;
+                });
+                
+                return rows;
+            } catch (error) {
+                console.error(`Error fetching ${sheetName}:`, error);
+                return [];
+            }
+        }
+
+        async function loadAllData() {
+            showLoading(true);
+            updateSyncStatus('syncing', '⟳ Syncing...');
+            
+            try {
+                const [csTeam, disputes, campaigns, funnels, branches, videoEditors, hiring, redFlags] = await Promise.all([
+                    fetchSheetData(SHEETS.CS_TEAM),
+                    fetchSheetData(SHEETS.DISPUTES),
+                    fetchSheetData(SHEETS.CAMPAIGNS),
+                    fetchSheetData(SHEETS.FUNNELS),
+                    fetchSheetData(SHEETS.BRANCHES),
+                    fetchSheetData(SHEETS.VIDEO_EDITORS),
+                    fetchSheetData(SHEETS.HIRING),
+                    fetchSheetData(SHEETS.RED_FLAGS)
+                ]);
+                
+                dashboardData = {
+                    csTeam,
+                    disputes,
+                    campaigns,
+                    funnels,
+                    branches,
+                    videoEditors,
+                    hiring,
+                    redFlags
+                };
+                
+                renderRedFlags();
+                renderHomeOffice();
+                renderBranchOps();
+                renderHiring();
+                
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+                updateSyncStatus('synced', '✓ Synced with Google Sheets');
+                
+                showLoading(false);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                updateSyncStatus('error', '✗ Sync Error');
+                showLoading(false);
+            }
+        }
+
+        // ========================================
+        // RENDERING FUNCTIONS
+        // ========================================
+        
+        function renderRedFlags() {
+            const container = document.getElementById('redFlagsContent');
+            const flagsRaw = dashboardData.redFlags || [];
+            const flags = filterByDate(flagsRaw);
+            
+            if (flags.length === 0) {
+                container.innerHTML = `
+                    <div class="success-banner">
+                        <h2>✅ No Red Flags - All Systems Healthy!</h2>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <div class="alert-banner">
+                    <h2>⚠️ ${flags.length} Red Flags Detected - Action Required</h2>
+            `;
+            
+            flags.forEach(flag => {
+                html += `
+                    <div class="alert-item">
+                        <strong>${flag.Category} - ${flag.Title}:</strong> ${flag.Description}
+                        <div style="margin-top: 8px; font-size: 14px; color: #4a5568;">
+                            ${flag.Details || ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+            
+            const priorities = flags.filter(f => f.Action).map(f => f.Action);
+            if (priorities.length > 0) {
+                html += `
+                    <div class="note">
+                        <strong>💡 Priority Actions:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            ${priorities.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function renderHomeOffice() {
+            const container = document.getElementById('homeOfficeContent');
+            
+            const csTeamRaw = dashboardData.csTeam || [];
+            const csTeamFiltered = filterByDate(csTeamRaw);
+            const csTeam = getLatestPerEntity(csTeamFiltered, 'Name');
+            
+            const disputesRaw = dashboardData.disputes || [];
+            const disputesFiltered = filterByDate(disputesRaw);
+            const disputes = getLatestPerEntity(disputesFiltered, 'Handler');
+            
+            const campaignsRaw = dashboardData.campaigns || [];
+            const campaigns = filterByDate(campaignsRaw);
+            
+            const funnelsRaw = dashboardData.funnels || [];
+            const funnels = filterByDate(funnelsRaw);
+            
+            let html = `
+                <div class="team-section">
+                    <h3>🏢 Home Office Team Performance</h3>
+                    <p style="margin-bottom: 20px; color: #718096;">CS Team, Dispute Management, Support Functions</p>
+                </div>
+
+                <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">📞 Customer Service Team</h4>
+            `;
+            
+            if (csTeam.length > 0) {
+                const totalMessages = csTeam.reduce((sum, p) => sum + (parseInt(p.Messages) || 0), 0);
+                const avgWorkload = Math.round(csTeam.reduce((sum, p) => sum + (parseInt(p.Workload) || 0), 0) / csTeam.length);
+                
+                html += `
+                    <div class="workload-card">
+                        <h3>📊 Workload & Capacity</h3>
+                        <div class="workload-grid">
+                            <div class="workload-item">
+                                <div class="workload-label">Total Messages</div>
+                                <div class="workload-value">${totalMessages}</div>
+                            </div>
+                            <div class="workload-item">
+                                <div class="workload-label">Team Members</div>
+                                <div class="workload-value">${csTeam.length}</div>
+                            </div>
+                            <div class="workload-item">
+                                <div class="workload-label">Avg Workload</div>
+                                <div class="workload-value">${avgWorkload}%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="team-section">
+                        <h3>CS Team - Performance</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Team Member</th>
+                                    <th>Messages</th>
+                                    <th>Workload</th>
+                                    <th>First Response</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                csTeam.forEach(person => {
+                    const workload = parseInt(person.Workload) || 0;
+                    const statusClass = workload > 85 ? 'red' : workload > 75 ? 'yellow' : 'green';
+                    const statusText = workload > 85 ? 'Overloaded' : workload > 75 ? 'High Load' : 'On Track';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Name}</span></td>
+                            <td>${person.Messages}</td>
+                            <td>${person.Workload}% ${workload > 85 ? '🔴' : ''}</td>
+                            <td>${person.FirstResponse}</td>
+                            <td><span class="indicator ${statusClass}"></span>${statusText}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            // Disputes section
+            if (disputes.length > 0) {
+                html += `
+                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">⚖️ Dispute Management</h4>
+                    
+                    <div class="team-section">
+                        <h3>Dispute Team - Workload</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Handler</th>
+                                    <th>Processor</th>
+                                    <th>Manual Today</th>
+                                    <th>Workload</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                disputes.forEach(person => {
+                    const workload = parseInt(person.Workload) || 0;
+                    const statusClass = workload > 75 ? 'yellow' : 'green';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${person.Handler}</span></td>
+                            <td>${person.Processor}</td>
+                            <td>${person.ManualToday}</td>
+                            <td>${person.Workload}%</td>
+                            <td><span class="indicator ${statusClass}"></span>${person.Status}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            // Campaigns section
+            if (campaigns.length > 0) {
+                const errors = campaigns.filter(c => c.ErrorDetails);
+                
+                html += `
+                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">📧 Campaigns</h4>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card blue">
+                            <div class="metric-label">Total Campaigns</div>
+                            <div class="metric-value">${campaigns.length}</div>
+                            <div class="metric-target">In selected date range</div>
+                            <span class="status-badge blue">Active</span>
+                        </div>
+                        <div class="metric-card ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
+                            <div class="metric-label">Errors</div>
+                            <div class="metric-value">${errors.length}</div>
+                            <div class="metric-target">Target: <2 errors</div>
+                            <span class="status-badge ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
+                                ${errors.length > 2 ? 'Action Needed' : errors.length > 0 ? 'Watch' : 'Clean'}
+                            </span>
+                        </div>
+                    </div>
+                `;
+                
+                if (errors.length > 0) {
+                    html += `
+                        <div class="team-section">
+                            <h3>Campaign Errors</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Campaign</th>
+                                        <th>Error</th>
+                                        <th>Fix Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    errors.forEach(error => {
+                        html += `
+                            <tr>
+                                <td>${error.Date}</td>
+                                <td>${error.Campaign}</td>
+                                <td>${error.ErrorDetails}</td>
+                                <td>${error.FixTime}</td>
+                                <td><span class="indicator green"></span>Fixed</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Funnels section
+            if (funnels.length > 0) {
+                const assigned = funnels.reduce((sum, f) => sum + (parseInt(f.Assigned) || 0), 0);
+                const completed = funnels.reduce((sum, f) => sum + (parseInt(f.Completed) || 0), 0);
+                const errors = funnels.filter(f => f.ErrorDetails);
+                
+                html += `
+                    <h4 style="margin: 30px 0 15px 0; color: #2d3748; font-size: 20px;">🎯 Funnels</h4>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card blue">
+                            <div class="metric-label">Funnels Assigned</div>
+                            <div class="metric-value">${assigned}</div>
+                            <div class="metric-target">In selected date range</div>
+                        </div>
+                        <div class="metric-card green">
+                            <div class="metric-label">Funnels Completed</div>
+                            <div class="metric-value">${completed}</div>
+                            <div class="metric-target">Completion rate: ${assigned > 0 ? Math.round((completed/assigned)*100) : 0}%</div>
+                        </div>
+                        <div class="metric-card ${errors.length > 2 ? 'red' : errors.length > 0 ? 'yellow' : 'green'}">
+                            <div class="metric-label">Errors</div>
+                            <div class="metric-value">${errors.length}</div>
+                            <div class="metric-target">Target: <2 errors</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (errors.length > 0) {
+                    html += `
+                        <div class="team-section">
+                            <h3>Funnel Errors</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Funnel</th>
+                                        <th>Error</th>
+                                        <th>Fix Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+                    
+                    errors.forEach(error => {
+                        html += `
+                            <tr>
+                                <td>${error.Date}</td>
+                                <td>${error.Funnel}</td>
+                                <td>${error.ErrorDetails}</td>
+                                <td>${error.FixTime}</td>
+                                <td><span class="indicator green"></span>Fixed</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function renderBranchOps() {
+            const container = document.getElementById('branchOpsContent');
+            
+            const branchesRaw = dashboardData.branches || [];
+            const branchesFiltered = filterByDate(branchesRaw);
+            const branches = getLatestPerEntity(branchesFiltered, 'Name');
+            
+            const videoEditorsRaw = dashboardData.videoEditors || [];
+            const videoEditorsFiltered = filterByDate(videoEditorsRaw);
+            const videoEditors = getLatestPerEntity(videoEditorsFiltered, 'Name');
+            
+            let html = `
+                <div class="team-section">
+                    <h3>🎬 Branch Operations Overview</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Branch</th>
+                                <th>Scripts Today</th>
+                                <th>Videos Today</th>
+                                <th>Backlog</th>
+                                <th>Team Size</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            branches.forEach(branch => {
+                const scripts = parseFloat(branch.ScriptsToday) || 0;
+                const videos = parseFloat(branch.VideosToday) || 0;
+                const ratio = scripts > 0 ? videos / scripts : 1;
+                const statusClass = ratio >= 0.95 ? 'green' : ratio >= 0.7 ? 'yellow' : 'red';
+                const statusText = ratio >= 0.95 ? 'Balanced' : ratio >= 0.7 ? 'Watch' : 'Bottleneck';
+                
+                html += `
+                    <tr>
+                        <td><span class="person-name">${branch.Name}</span></td>
+                        <td>${branch.ScriptsToday}</td>
+                        <td>${branch.VideosToday} ${ratio < 0.7 ? '🔴' : ''}</td>
+                        <td>${branch.Backlog}</td>
+                        <td>${branch.TeamSize}</td>
+                        <td><span class="indicator ${statusClass}"></span>${statusText}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            // Video Editors section
+            if (videoEditors.length > 0) {
+                html += `
+                    <div class="team-section" style="margin-top: 30px;">
+                        <h3>🎥 Video Editors Performance</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Branch</th>
+                                    <th>Videos Today</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                videoEditors.forEach(editor => {
+                    const videos = parseFloat(editor.VideosToday) || 0;
+                    const statusClass = editor.Status === 'On Track' || editor.Status === 'Acceptable' ? 'green' : 
+                                      editor.Status === 'Watch' ? 'yellow' : 'red';
+                    
+                    html += `
+                        <tr>
+                            <td><span class="person-name">${editor.Name}</span></td>
+                            <td>${editor.Branch}</td>
+                            <td>${editor.VideosToday}</td>
+                            <td>${editor.Target}</td>
+                            <td><span class="indicator ${statusClass}"></span>${editor.Status}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        function renderHiring() {
+            const container = document.getElementById('hrHiringContent');
+            
+            const hiringRaw = dashboardData.hiring || [];
+            const hiringFiltered = filterByDate(hiringRaw);
+            const hiring = getLatestPerEntity(hiringFiltered, 'Position');
+            
+            let html = `
+                <div class="team-section">
+                    <h3>👥 Open Positions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Days Open</th>
+                                <th>Candidates</th>
+                                <th>Stage</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            hiring.forEach(position => {
+                const daysOpen = parseInt(position.DaysOpen) || 0;
+                const statusClass = daysOpen > 40 ? 'red' : daysOpen > 25 ? 'yellow' : 'green';
+                
+                html += `
+                    <tr>
+                        <td><span class="person-name">${position.Position}</span></td>
+                        <td>${position.Department}</td>
+                        <td>${position.DaysOpen} days ${daysOpen > 40 ? '🔴' : daysOpen > 25 ? '🟡' : ''}</td>
+                        <td>${position.Candidates}</td>
+                        <td>${position.Stage}</td>
+                        <td><span class="indicator ${statusClass}"></span>${position.Status}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function updateSyncStatus(status, text) {
+            const statusEl = document.getElementById('syncStatus');
+            statusEl.className = `sync-status ${status}`;
+            statusEl.textContent = text;
+        }
+
+        function showTab(tabId) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
-
-            // Remove active class from all tabs
+            
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => tab.classList.remove('active'));
-
-            // Show selected tab content
-            document.getElementById(tabName).classList.add('active');
-
-            // Add active class to clicked tab
+            
+            document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
         }
+
+        // ========================================
+        // AUTO-REFRESH
+        // ========================================
+        
+        setInterval(() => {
+            loadAllData();
+        }, 5 * 60 * 1000); // 5 minutes
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeDateFilter();
+            loadAllData();
+        });
     </script>
 </body>
 </html>
