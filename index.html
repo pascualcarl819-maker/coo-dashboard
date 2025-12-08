@@ -489,11 +489,21 @@
                 const text = await response.text();
                 const json = JSON.parse(text.substr(47).slice(0, -2));
                 
-                if (!json.table || !json.table.rows) return [];
+                if (!json.table || !json.table.rows || json.table.rows.length === 0) return [];
                 
-                const headers = json.table.cols.map(col => col.label || '');
+                // Check if column labels exist
+                let headers = json.table.cols.map(col => col.label || '');
+                const hasLabels = headers.some(h => h && h.trim() !== '');
                 
-                return json.table.rows.map(row => {
+                let dataRows = json.table.rows;
+                
+                // If no labels, use first row as headers
+                if (!hasLabels && dataRows.length > 0) {
+                    headers = dataRows[0].c.map(cell => cell ? (cell.v || '') : '');
+                    dataRows = dataRows.slice(1); // Remove header row from data
+                }
+                
+                return dataRows.map(row => {
                     const obj = {};
                     row.c.forEach((cell, i) => {
                         if (headers[i]) {
@@ -695,11 +705,11 @@
                 return;
             }
             
-            // Summary
-            const total = data.length;
             const overperformers = data.filter(r => r.Status && r.Status.includes('Overperformer')).length;
             const expected = data.filter(r => r.Status && r.Status.includes('Expected')).length;
             const underperformers = data.filter(r => r.Status && r.Status.includes('Underperformer')).length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -707,7 +717,7 @@
                     <div class="summary-cards">
                         <div class="summary-card">
                             <div class="summary-card-label">Total Entries</div>
-                            <div class="summary-card-value">${total}</div>
+                            <div class="summary-card-value">${data.length}</div>
                         </div>
                         <div class="summary-card green">
                             <div class="summary-card-label">🌟 Overperformers</div>
@@ -725,36 +735,29 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Hours Worked</th>
-                                <th>Messages Sent</th>
-                                <th>First Response</th>
-                                <th>Avg Response</th>
-                                <th>Resolution Time</th>
-                                <th>Target</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status && row.Status.includes('Overperformer') ? 'status-green' : 
-                                   row.Status && row.Status.includes('Underperformer') ? 'status-red' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Name || ''}</strong></td>
-                        <td>${row['Hours Worked'] || ''}</td>
-                        <td>${row['Messages Sent'] || ''}</td>
-                        <td>${formatDuration(row['First Response Time'])}</td>
-                        <td>${formatDuration(row['Average Response Time'])}</td>
-                        <td>${formatDuration(row['Resolution Time'])}</td>
-                        <td>${row.Target || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase().includes('time') || col.toLowerCase().includes('response') || col.toLowerCase().includes('resolution')) value = formatDuration(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value.includes('Overperformer')) className = 'status-green';
+                        else if (value.includes('Underperformer')) className = 'status-red';
+                    }
+                    if (col.toLowerCase() === 'name') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -774,6 +777,8 @@
             const overperformers = data.filter(r => r.Status && r.Status.includes('Overperformer')).length;
             const expected = data.filter(r => r.Status && r.Status.includes('Expected')).length;
             const underperformers = data.filter(r => r.Status && r.Status.includes('Underperformer')).length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -799,34 +804,28 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Handler</th>
-                                <th>Store</th>
-                                <th>Processor</th>
-                                <th>Hours Worked</th>
-                                <th>Responded Today</th>
-                                <th>Target</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status && row.Status.includes('Overperformer') ? 'status-green' : 
-                                   row.Status && row.Status.includes('Underperformer') ? 'status-red' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Handler || row.Name || ''}</strong></td>
-                        <td>${row.Store || ''}</td>
-                        <td>${row.Processor || ''}</td>
-                        <td>${row['Hours Worked'] || ''}</td>
-                        <td>${row['Responded Today'] || ''}</td>
-                        <td>${row.Target || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value.includes('Overperformer')) className = 'status-green';
+                        else if (value.includes('Underperformer')) className = 'status-red';
+                    }
+                    if (col.toLowerCase() === 'name' || col.toLowerCase() === 'handler') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -846,6 +845,8 @@
             const overperformers = data.filter(r => r.Status && r.Status.includes('Overperformer')).length;
             const expected = data.filter(r => r.Status && r.Status.includes('Expected')).length;
             const underperformers = data.filter(r => r.Status && r.Status.includes('Underperformer')).length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -871,30 +872,28 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Branch</th>
-                                <th>Scripts Created</th>
-                                <th>Target</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status && row.Status.includes('Overperformer') ? 'status-green' : 
-                                   row.Status && row.Status.includes('Underperformer') ? 'status-red' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Name || ''}</strong></td>
-                        <td>${row.Branch || ''}</td>
-                        <td>${row['Scripts Created'] || ''}</td>
-                        <td>${row.Target || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value.includes('Overperformer')) className = 'status-green';
+                        else if (value.includes('Underperformer')) className = 'status-red';
+                    }
+                    if (col.toLowerCase() === 'name') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -911,9 +910,13 @@
                 return;
             }
             
+            // Count status dynamically
             const overperformers = data.filter(r => r.Status && r.Status.includes('Overperformer')).length;
             const expected = data.filter(r => r.Status && r.Status.includes('Expected')).length;
             const underperformers = data.filter(r => r.Status && r.Status.includes('Underperformer')).length;
+            
+            // Get columns dynamically
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -939,30 +942,35 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Branch</th>
-                                <th>Videos</th>
-                                <th>Images</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status && row.Status.includes('Overperformer') ? 'status-green' : 
-                                   row.Status && row.Status.includes('Underperformer') ? 'status-red' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Name || ''}</strong></td>
-                        <td>${row.Branch || ''}</td>
-                        <td>${row.Videos || ''}</td>
-                        <td>${row.Images || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    // Format date
+                    if (col.toLowerCase() === 'date') {
+                        value = formatDate(value);
+                    }
+                    // Color code status
+                    if (col.toLowerCase() === 'status') {
+                        if (value.includes('Overperformer')) className = 'status-green';
+                        else if (value.includes('Underperformer')) className = 'status-red';
+                    }
+                    // Bold name
+                    if (col.toLowerCase() === 'name') {
+                        value = `<strong>${value}</strong>`;
+                    }
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -987,36 +995,38 @@
                     grouped[key] = {
                         Date: row.Date,
                         Name: row.Name,
-                        CampaignName: row['Campaign Name'],
+                        'Campaign Name': row['Campaign Name'],
                         Errors: 0,
-                        TotalSeverity: 0,
-                        ErrorDetails: []
+                        'Total Severity': 0,
+                        'Error Details': []
                     };
                 }
                 if (row['Error Severity']) {
                     grouped[key].Errors++;
-                    grouped[key].TotalSeverity += SEVERITY_WEIGHTS[row['Error Severity']] || 0;
-                    grouped[key].ErrorDetails.push(`${row['Error Severity']}: ${row['Error Details'] || 'No details'}`);
+                    grouped[key]['Total Severity'] += SEVERITY_WEIGHTS[row['Error Severity']] || 0;
+                    grouped[key]['Error Details'].push(`${row['Error Severity']}: ${row['Error Details'] || 'No details'}`);
                 }
             });
             
-            const aggregated = Object.values(grouped);
-            
-            // Calculate summary by person by day
-            const personDaySummary = {};
-            aggregated.forEach(row => {
-                const key = `${row.Date}|${row.Name}`;
-                if (!personDaySummary[key]) {
-                    personDaySummary[key] = { campaigns: 0, errors: 0, severity: 0 };
-                }
-                personDaySummary[key].campaigns++;
-                personDaySummary[key].errors += row.Errors;
-                personDaySummary[key].severity += row.TotalSeverity;
+            const aggregated = Object.values(grouped).map(row => {
+                const successRate = 100 - row['Total Severity'];
+                let status = '🌟 Overperformer';
+                if (successRate < 95) status = '🔴 Underperformer';
+                else if (successRate < 100) status = '✅ Expected';
+                
+                return {
+                    ...row,
+                    'Total Severity': row['Total Severity'] + '%',
+                    'Error Details': row['Error Details'].join('; ') || '-',
+                    Status: status
+                };
             });
             
             const totalCampaigns = aggregated.length;
             const totalErrors = aggregated.reduce((sum, r) => sum + r.Errors, 0);
             const criticalErrors = data.filter(r => r['Error Severity'] === 'Critical').length;
+            
+            const columns = Object.keys(aggregated[0] || {});
             
             let html = `
                 <div class="team-section">
@@ -1034,50 +1044,32 @@
                             <div class="summary-card-label">Critical Errors</div>
                             <div class="summary-card-value">${criticalErrors}</div>
                         </div>
-                        <div class="summary-card">
-                            <div class="summary-card-label">Success Rate</div>
-                            <div class="summary-card-value">${totalCampaigns > 0 ? Math.round((1 - (aggregated.reduce((sum, r) => sum + r.TotalSeverity, 0) / 100 / totalCampaigns)) * 100) : 100}%</div>
-                        </div>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Campaign Name</th>
-                                <th>Errors</th>
-                                <th>Severity %</th>
-                                <th>Error Details</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             aggregated.forEach(row => {
-                const successRate = 100 - row.TotalSeverity;
-                let status = '🌟 Overperformer';
-                let statusClass = 'status-green';
-                
-                if (successRate < 95) {
-                    status = '🔴 Underperformer';
-                    statusClass = 'status-red';
-                } else if (successRate < 100) {
-                    status = '✅ Expected';
-                    statusClass = '';
-                }
-                
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Name || ''}</strong></td>
-                        <td>${row.CampaignName || ''}</td>
-                        <td>${row.Errors}</td>
-                        <td>${row.TotalSeverity}%</td>
-                        <td>${row.ErrorDetails.join('; ') || '-'}</td>
-                        <td class="${statusClass}">${status}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value.includes('Overperformer')) className = 'status-green';
+                        else if (value.includes('Underperformer')) className = 'status-red';
+                    }
+                    if (col.toLowerCase() === 'name') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -1097,6 +1089,8 @@
             const completed = data.filter(r => r.Completed === 'Yes').length;
             const notCompleted = data.filter(r => r.Completed === 'No').length;
             const withErrors = data.filter(r => r['Error Severity']).length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -1122,31 +1116,31 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Funnel Name</th>
-                                <th>Completed</th>
-                                <th>Error Severity</th>
-                                <th>Error Details</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const completedClass = row.Completed === 'Yes' ? 'status-green' : 'status-red';
-                const severityClass = row['Error Severity'] === 'Critical' ? 'status-red' : 
-                                     row['Error Severity'] === 'Major' ? 'status-yellow' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Name || ''}</strong></td>
-                        <td>${row['Funnel Name'] || ''}</td>
-                        <td class="${completedClass}">${row.Completed || ''}</td>
-                        <td class="${severityClass}">${row['Error Severity'] || '-'}</td>
-                        <td>${row['Error Details'] || '-'}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'completed') {
+                        className = value === 'Yes' ? 'status-green' : value === 'No' ? 'status-red' : '';
+                    }
+                    if (col.toLowerCase().includes('severity')) {
+                        if (value === 'Critical') className = 'status-red';
+                        else if (value === 'Major') className = 'status-yellow';
+                    }
+                    if (col.toLowerCase() === 'name') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value || '-'}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -1167,6 +1161,8 @@
             const totalInterviewed = data.reduce((sum, r) => sum + (parseInt(r.Interviewed) || 0), 0);
             const totalHired = data.reduce((sum, r) => sum + (parseInt(r.Hired) || 0), 0);
             const openRoles = data.filter(r => r.Status !== 'Filled').length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -1192,34 +1188,29 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Role</th>
-                                <th>Sourced</th>
-                                <th>Reached Out</th>
-                                <th>Interviewed</th>
-                                <th>Offers</th>
-                                <th>Hired</th>
-                                <th>Status</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status === 'Filled' ? 'status-green' : 
-                                   row.Status === 'Sourcing' ? 'status-yellow' : 'status-blue';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Role || ''}</strong></td>
-                        <td>${row.Sourced || ''}</td>
-                        <td>${row['Reached Out'] || ''}</td>
-                        <td>${row.Interviewed || ''}</td>
-                        <td>${row.Offers || ''}</td>
-                        <td>${row.Hired || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value === 'Filled') className = 'status-green';
+                        else if (value === 'Sourcing') className = 'status-yellow';
+                        else className = 'status-blue';
+                    }
+                    if (col.toLowerCase() === 'role' || col.toLowerCase() === 'name') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -1240,6 +1231,8 @@
             const inProgress = data.filter(r => r.Status === 'In Progress').length;
             const roadblocks = data.filter(r => r.Status === 'Roadblock').length;
             const notStarted = data.filter(r => r.Status === 'Not Started').length;
+            
+            const columns = Object.keys(data[0]);
             
             let html = `
                 <div class="team-section">
@@ -1265,29 +1258,29 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Task</th>
-                                <th>Breakdown</th>
-                                <th>Status</th>
-                                <th>Roadblock</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                const statusClass = row.Status === 'Done' ? 'status-green' : 
-                                   row.Status === 'Roadblock' ? 'status-red' : 
-                                   row.Status === 'In Progress' ? 'status-blue' : '';
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Task || ''}</strong></td>
-                        <td>${row['Breakdown of Task'] || ''}</td>
-                        <td class="${statusClass}">${row.Status || ''}</td>
-                        <td>${row.Roadblock || '-'}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    let className = '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'status') {
+                        if (value === 'Done') className = 'status-green';
+                        else if (value === 'Roadblock') className = 'status-red';
+                        else if (value === 'In Progress') className = 'status-blue';
+                    }
+                    if (col.toLowerCase() === 'task') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td class="${className}">${value || '-'}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
@@ -1304,32 +1297,31 @@
                 return;
             }
             
+            const columns = Object.keys(data[0]);
+            
             let html = `
                 <div class="team-section">
                     <h3>📝 Weekly Updates</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Team</th>
-                                <th>Update</th>
-                                <th>Impact</th>
-                                <th>Next Steps</th>
+                                ${columns.map(col => `<th>${col}</th>`).join('')}
                             </tr>
                         </thead>
                         <tbody>
             `;
             
             data.forEach(row => {
-                html += `
-                    <tr>
-                        <td>${formatDate(row.Date)}</td>
-                        <td><strong>${row.Team || ''}</strong></td>
-                        <td>${row.Update || ''}</td>
-                        <td>${row.Impact || ''}</td>
-                        <td>${row['Next Steps'] || ''}</td>
-                    </tr>
-                `;
+                html += '<tr>';
+                columns.forEach(col => {
+                    let value = row[col] || '';
+                    
+                    if (col.toLowerCase() === 'date') value = formatDate(value);
+                    if (col.toLowerCase() === 'team') value = `<strong>${value}</strong>`;
+                    
+                    html += `<td>${value}</td>`;
+                });
+                html += '</tr>';
             });
             
             html += '</tbody></table></div>';
